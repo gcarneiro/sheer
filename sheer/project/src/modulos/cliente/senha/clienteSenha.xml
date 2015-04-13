@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Cadastro de senhas de Cliente</name>
+		<description>Cadastro de senhas de acesso dos serviços do clientes</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="clienteSenha" table="bg_clienteSenha">
+			<fields>
+				
+				<field id="id"			 				name="Identificador" 			dataType="string"		required="true" 	primaryKey="true" />
+				<field id="idCliente"			 		name="Cliente"		 			dataType="string"		required="true"  />
+				<field id="acesso"			 			name="Acesso"		 			dataType="string"		required="false"  	defaultValue="http://" />
+				<field id="login"				 		name="Login"		 			dataType="string"		required="true"  />
+				<field id="senha"				 		name="Senha"		 			dataType="string"		required="true"  />
+				<field id="servico"						name="Serviço" 					dataType="string"		required="true" 	primaryName="true"/>		
+				<field id="observacao"					name="Observações" 				dataType="html" />		
+				
+			</fields>
+		</datasource>
+		
+	</datasources>
+		
+	<dataProviders>
+	
+		<dataProvider dataSource="clienteSenha" id="clienteSenhaPorPessoa">
+			<filters>
+				<filter id="idCliente" field="idCliente" required="true"/>
+			</filters>
+		</dataProvider>
+	
+		<dataProvider dataSource="clienteSenha" id="clienteSenhaPorId">
+			<filters>
+				<filter id="id" field="id" required="true"/>
+			</filters>
+		</dataProvider>
+	
+	</dataProviders>
+	
+	<renderables>
+	
+		 <renderable id="adicionarSenha">
+		 	<dataProviders>
+		 		<dataProvider id="clienteSenhaPorId"/>
+		 	</dataProviders>
+		 	<styles>
+		 		<style path="adicionarSenha.php" id="adicionarSenha"/>
+		 	</styles>
+		 </renderable>
+		 
+		 <renderable id="listaSenhaCliente">
+		 	<dataProviders>
+		 		<dataProvider id="clienteSenhaPorPessoa"/>
+		 	</dataProviders>
+		 	<styles>
+		 		<style path="listaSenhaCliente.php" id="listaSenhaCliente"/>
+		 	</styles>
+		 </renderable>
+		 
+	</renderables>
+	
+	<actionHandlers>
+		<actionHandler datasource="clienteSenha" action="adicionarAtualizarSenha" id="adicionarAtualizarSenha"></actionHandler>
+	</actionHandlers>
+
+</modulo>

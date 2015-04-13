@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd">
+
+	<info>
+		<name>[ADDON] Publication Metadata</name>
+		<description>Módulo addon - Controla os metadados de publicação de conteúdos</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="publicationMetadata" table="sh_publicationMetadata" >
+			<fields>
+				<field id="contentId" 				name="Id" 			dataType="string" required="true" 	primaryKey="true" primaryName="true" />
+				<field id="datasourceId"	 		name="Nome"	 		dataType="string" required="true" 	 />
+				
+				<field id="created"					name="Criado Por" 	dataType="datetime" required="true" />
+				<field id="createdBy"				name="Criado Em" 	dataType="string" required="true" />
+				
+				<field id="updated"					name="Criado Por" 	dataType="datetime" required="true" />
+				<field id="updatedBy"				name="Criado Em" 	dataType="string" required="true" />
+				
+				<field id="removed"					name="Criado Por" 	dataType="datetime" required="false" />
+				<field id="removedBy"				name="Criado Em" 	dataType="string" required="false" />
+				
+				<field id="revision"				name="Revisão" 		dataType="integer" required="true"	defaultValue="1" />
+			</fields>
+			
+			<addons>
+				<publicationHistory 	enabled="false"/>
+				<publicationMetadata 	enabled="false"/>
+				<imageRepository 		enabled="false"/>
+			</addons>
+			
+			
+			
+			
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Altero o detalhes pois o primaryKey do banco é formado pela combinação "contentId", "datasourceId"
+		 -->
+		<dataProvider id="publicationMetadata_detalhes" dataSource="publicationMetadata">
+			<filters>
+				<filter id="contentId" 		field="contentId"		required="true" />
+				<filter id="datasourceId" 	field="datasourceId" 	required="true" />
+			</filters>
+		</dataProvider>
+		
+	</dataProviders>
+	
+</modulo>	

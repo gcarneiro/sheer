@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Remetentes</name>
+		<description>Modulo para controlar os remetentes de mala direta</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaRemetente" table="sh_ml_remetente">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="nomeEnvio" 			name="Nome de Envio" 		dataType="string" 	required="false" 	primaryName="true" />
+				<field id="emailEnvio" 			name="Email de Envio" 		dataType="string" 	required="false"	/>
+				<field id="listaEmail" 			name="Lista de E-mail Padrão" 	dataType="text" 	required="false" 	setNullIfBlank="true" lookup="true">
+					<options getOptionsFromVariable="\Sh\Modules\malaDiretaCampanha\malaDiretaCampanhaListas/emailList" blankOption="Selecione" />
+				</field>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<renderables>
+	
+		<!-- Adicionar remetente -->
+		<renderable id="adicionarRemetente">
+			<styles>
+				<style path="adicionarRemetente.php" id="adicionarRemetente"/>
+			</styles>
+		</renderable>
+		
+		<!-- Editar remetente -->
+		<renderable id="editarRemetente">
+			<dataProviders>
+				<dataProvider id="malaDiretaRemetente_detalhes" />
+			</dataProviders>
+			<styles>
+				<style path="editarRemetente.php" id="editarRemetente"/>
+			</styles>
+		</renderable>
+		
+		<!-- Lista de remetentes -->
+		<renderable id="listaRemetente">
+			<dataProviders>
+				<dataProvider id="malaDiretaRemetente_lista" />
+			</dataProviders>
+			<styles>
+				<style path="listaRemetente.php" id="listaRemetente"/>
+			</styles>
+		</renderable>
+		
+	</renderables>
+	
+	<actionHandlers>
+	
+		<actionHandler datasource="malaDiretaRemetente" action="removerRemetente" id="removerRemetente" />
+		
+	</actionHandlers>
+</modulo>	

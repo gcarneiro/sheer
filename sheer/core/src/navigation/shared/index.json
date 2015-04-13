@@ -1,0 +1,16 @@
+{
+	"config": {
+		"title"			: "Login - Sheer",
+		"description"	: "Efetue o login no Sheer",
+		"template" 		: "sheer-login.php"
+	},
+
+	"holders": {
+	
+	},
+	
+	"passports" : {
+		
+	}
+
+}

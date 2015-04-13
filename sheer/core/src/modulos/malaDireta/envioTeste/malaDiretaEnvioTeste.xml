@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Envio de teste</name>
+		<description>Modulo de envios de teste da campanha</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaEnvioTeste" table="sh_ml_envioTeste">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idCampanha" 			name="Campanha" 			dataType="string"	required="true" 	/>
+				<field id="assunto" 			name="Assunto da Campanha" 	dataType="string" 	required="true"		/>
+				<field id="idRemetente" 		name="Remetente" 			dataType="string" 		required="true" primaryName="true" >
+					<options getOptionsFromDataProvider="malaDiretaRemetente/malaDiretaRemetente_listaSimples" blankOption="Selecione" />
+				</field>
+				<field id="html" 				name="Campanha" 			dataType="html" 		required="true"		/>
+				<field id="destinos" 			name="Destinos" 			dataType="text" 		required="true"		/>
+				<field id="envioEm" 			name="Enviado Em" 			dataType="datetime" 	required="false"	/>
+				<field id="envioPor" 			name="Enviado Por" 			dataType="string" 		required="false"	/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		 <!-- 
+		 	Customizo o detalhes para trazer o remetente
+		 	usado no agendamento detalhes 
+		 -->
+		 <dataProvider id="malaDiretaEnvioTeste_detalhes" dataSource="malaDiretaEnvioTeste">
+		 	<relations>
+		 		<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+		 	</relations>
+		 	<filters>
+		 		<filter id="id" field="id" required="true" />
+		 	</filters>
+		 </dataProvider>
+		 
+		 <!-- 
+		 	Customizo o lista para:
+		 		- Trazer as informações do remetente
+		 		- Poder filtrar pela campanha (IN)
+		  -->
+		 <dataProvider id="malaDiretaEnvioTeste_lista" dataSource="malaDiretaEnvioTeste">
+		 	<relations>
+		 		<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+		 		<relation id="user" dataSource="user/user" leftKey="envioPor" />
+		 	</relations>
+		 	<filters>
+		 		<filter id="idCampanha" field="idCampanha" operator="in" />
+		 	</filters>
+		 </dataProvider>
+	
+	</dataProviders>
+	
+	<renderables>
+		
+		<!-- RENDER para enviar um teste -->
+		<renderable id="enviarTeste">
+			<styles>
+				<style path="enviarTeste.php" id="enviarTeste"/>
+			</styles>
+		</renderable>
+		
+		<!-- RENDER para exibir os detalhes do envio -->
+		<renderable id="detalhesTesteEnvio">
+			<dataProviders>
+				<dataProvider id="malaDiretaEnvioTeste_detalhes" />
+			</dataProviders>
+			<styles>
+				<style path="detalhesTesteEnvio.php" id="detalhesTesteEnvio"/>
+			</styles>
+		</renderable>
+		
+	</renderables>
+	
+	<actionHandlers>
+		<actionHandler id="enviarTeste"  datasource="malaDiretaEnvioTeste" action="enviarTeste" />
+	</actionHandlers>
+</modulo>	

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<requisicao-transacao id="{{id}}" versao="1.4.0">
+    <dados-ec>
+        <numero>{{loja.numero}}</numero>
+        <chave>{{loja.chave}}</chave>
+    </dados-ec>
+    <dados-portador>
+        <numero>{{portador.numero}}</numero>
+        <validade>{{portador.validade}}</validade>
+        <indicador>{{portador.indicador}}</indicador>
+        <codigo-seguranca>{{portador.seguranca}}</codigo-seguranca>
+        <nome-portador>{{portador.nome}}</nome-portador>
+        <token></token>
+    </dados-portador>
+    <dados-pedido>
+        <numero>{{pedido.ordem}}</numero>
+        <valor>{{pedido.valor}}</valor>
+        <moeda>{{pedido.moeda}}</moeda>
+        <data-hora>{{pedido.data}}</data-hora>
+        <descricao>{{pedido.descricao}}</descricao>
+        <idioma>{{pedido.idioma}}</idioma>
+        <soft-descriptor>{{pedido.soft-descriptor}}</soft-descriptor>
+    </dados-pedido>
+     <forma-pagamento>
+        <bandeira>{{pagamento.bandeira}}</bandeira>
+        <produto>{{pagamento.produto}}</produto>
+        <parcelas>{{pagamento.parcelas}}</parcelas>
+    </forma-pagamento>
+    <autorizar>{{transacao.autorizar}}</autorizar>
+    <capturar>{{transacao.capturar}}</capturar>
+    {{transacao.gerarToken}}
+</requisicao-transacao>

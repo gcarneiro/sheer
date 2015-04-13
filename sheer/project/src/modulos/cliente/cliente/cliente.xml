@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Cadastro Cliente</name>
+		<description>Cadastro de clientes da BG</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="cliente" table="bg_cliente">
+			<fields>
+				
+				<field id="id"			 				name="Identificador" 			dataType="string"		required="true" 	primaryKey="true" />
+				<field id="nome" 						name="Nome" 					dataType="string"		required="true" 	primaryName="true"/>
+				<field id="tipoPessoa"					name="Tipo"						dataType="integer"		required="true"		lookup="true" >
+					<options getOptionsFromVariable="\Sh\Modules\cliente\cliente/tipo"  />
+				</field>				
+				<field id="razaoSocial"					name="Razão Social" 			dataType="string"		required="false" />
+				<field id="cpf"							name="CPF" 						dataType="string"		required="false" />
+				<field id="cnpj"						name="CNPJ" 					dataType="string"		required="false" />
+				<field id="inscricaoMunicipal"			name="Inscrição Municipal"		dataType="string"		required="false" />
+				
+				<field id="email"						name="E-mail"					dataType="string"		required="false" />
+				<field id="email2"						name="E-mail de Cobrança"		dataType="string"		required="false" />
+				<field id="telefone"					name="Telefone"					dataType="string"		required="false" />
+				<field id="telefone2"					name="Telefone Secundário"		dataType="string"		required="false" />
+				
+				<field id="cep"							name="CEP"						dataType="string"		required="false" />
+				<field id="idEstado"						name="Estado"					dataType="integer"		required="false" >
+					<options getOptionsFromDataProvider="localidade/uf_listaSimples" />
+				</field>
+				<field id="idCidade"						name="Cidade"					dataType="integer"		required="false" >
+					<options getOptionsFromDataProvider="localidade/listaCidadesPorEstado" />
+				</field>
+				<field id="idBairro"						name="Bairro"					dataType="string"		required="false" >
+					<options getOptionsFromDataProvider="localidade/listaBairrosPorCidade" />
+				</field>
+				<field id="endereco"					name="Endereço"					dataType="string"		required="false" />
+				<field id="numero"						name="Número"					dataType="string"		required="false" />
+				<field id="codigo"						name="Código"					dataType="string"		required="false" />
+				<field id="complemento"					name="Complemento"				dataType="string"		required="false" />
+				<field id="foto"						name="Foto"						dataType="image"		required="false">
+					<pictures>
+						<map id="fin-cliente" />
+					</pictures>
+				</field>
+				
+			</fields>
+		</datasource>
+		
+	</datasources>
+	<dataProviders>
+	
+		<!-- Busco cliente por maior número do código -->
+		<dataProvider id="clientePorCodigo" dataSource="cliente">
+			<sort>
+				<by order="desc" field="codigo"/>
+			</sort>
+			<maxRows>1</maxRows>
+		</dataProvider>
+	
+		<dataProvider id="cliente_lista" dataSource="cliente" dataParser="parseClientePadrao">
+			<relations>
+				<relation dataSource="localidade/uf" 	 id="estado"  leftKey="idEstado"></relation>
+				<relation dataSource="localidade/cidade" id="cidade"  leftKey="idCidade"></relation>
+				<relation dataSource="localidade/bairro" id="bairro"  leftKey="idBairro"></relation>
+			</relations>
+			<filters>
+				<filter id="nome" field="nome" operator="likeSplit" />
+				<filter id="cpf"  field="cpf"  operator="likeSplit" />
+				<filter id="cnpj" field="cnpj" operator="likeSplit" />
+			</filters>
+			<maxRows>200</maxRows>
+		</dataProvider>
+		
+		<dataProvider id="cliente_detalhes" dataSource="cliente" dataParser="parseClientePadrao">
+			<relations>
+				<relation dataSource="localidade/uf" 	 						id="estado"  leftKey="idEstado"></relation>
+				<relation dataSource="localidade/cidade" 						id="cidade"  leftKey="idCidade"></relation>
+				<relation dataSource="localidade/bairro" 						id="bairro"  leftKey="idBairro"></relation>
+			</relations>
+			<filters>
+				<filter id="id" field="id" required="true"/>
+			</filters>
+		</dataProvider>
+		
+	</dataProviders>
+	
+	
+	<renderables>
+	
+		 <renderable id="adicionarCliente">
+		 	<dataProviders>
+		 		<dataProvider id="cliente_detalhes"/>
+		 	</dataProviders>
+		 	<styles>
+		 		<style path="adicionarCliente.php" id="adicionarCliente"/>
+		 	</styles>
+		 </renderable>
+		 
+		 <renderable id="listaClientes">
+		 	<dataProviders>
+		 		<dataProvider id="cliente_lista"/>
+		 	</dataProviders>
+		 	<styles>
+		 		<style path="listaClientes.php" id="listaClientes"/>
+		 	</styles>
+		 </renderable>
+		 
+		 <renderable id="verCliente">
+		 	<dataProviders>
+		 		<dataProvider id="cliente_detalhes"/>
+		 	</dataProviders>
+		 	<styles>
+		 		<style path="verCliente.php" id="verCliente"/>
+		 	</styles>
+		 </renderable>
+		 
+		 <renderable id="boleto">
+		 	<styles>
+		 		<style path="boleto.php" id="boleto"/>
+		 	</styles>
+		 </renderable>
+		 
+	</renderables>
+	
+	<actionHandlers>
+		<actionHandler datasource="cliente" action="alterarCliente" id="alterarCliente"></actionHandler>
+	</actionHandlers>
+		
+</modulo>

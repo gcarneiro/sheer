@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Campanha</name>
+		<description>Modulo de gerenciamento de campanhas para mala direta</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaCampanha" table="sh_ml_campanha">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idRemetente" 		name="Remetente" 			dataType="string" 	required="true" 	primaryName="true" >
+					<options getOptionsFromDataProvider="malaDiretaRemetente/malaDiretaRemetente_listaSimples" blankOption="Selecione" />
+				</field>
+				<field id="assunto" 			name="Assunto da Campanha" 	dataType="string" 	required="true" />
+				<field id="html" 				name="Campanha" 			dataType="html" 	required="true" />
+				<field id="criadoEm" 			name="Data de Criação" 		dataType="date" 	required="false" 	defaultValue="date.now" />
+				<field id="criadoPor" 			name="Criado Por" 			dataType="string" 	required="false" 	defaultValue="user.id" />
+				<field id="atualizadoEm" 		name="Atualizado Em" 		dataType="datetime" required="false"	defaultValue="datetime.now"  />
+				<field id="atualizadoPor" 		name="Atualizado Por" 		dataType="string" 	required="false"	defaultValue="user.id"  />
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Customizo a lista para trazer outras informações como "remetente"
+		 -->
+		<dataProvider id="malaDiretaCampanha_lista" dataSource="malaDiretaCampanha">
+			<relations>
+				<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+			</relations>
+			<sort>
+				<by field="atualizadoEm" order="desc"/>
+			</sort>
+		</dataProvider>
+		
+		<!-- 
+			Customizo os detalhes para trazer outras informações como "remetente"
+		 -->
+		<dataProvider id="malaDiretaCampanha_detalhes" dataSource="malaDiretaCampanha">
+			<relations>
+				<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+			</relations>
+			<filters>
+				<filter id="id" field="id" required="true" />
+			</filters>
+		</dataProvider>
+	
+		<!-- dataprovider utilizado na pagina de detalhes da campanha -->
+<!-- 		<dataProvider id="malaDiretaCampanha_detalhes"  dataSource="malaDiretaCampanha">
+			<relations>
+				<relation id="user" dataSource="user/user" leftKey="criadoPor" />
+				<relation id="agendamento" dataSource="malaDiretaAgendamento/malaDiretaAgendamento" rightKey="idCampanha" dataFormatter="fieldContentMultiple" />
+				<relation id="disparo" dataSource="malaDiretaDisparo/malaDiretaDisparo" rightKey="idCampanha" dataFormatter="fieldContentMultiple" >
+					<relations>
+						<relation id="disparoVisualizacao" dataSource="malaDiretaDisparo/malaDiretaDisparoVisualizacao" rightKey="idDisparo" dataFormatter="fieldContentMultiple" />
+						<relation id="disparoRemocao" dataSource="malaDiretaDisparo/malaDiretaDisparoRemocao" rightKey="idDisparo" dataFormatter="fieldContentMultiple"/>
+						<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente"  />
+						<relation id="agendamento" dataSource="malaDiretaAgendamento/malaDiretaAgendamento" leftKey="idAgendamento" />
+					</relations>
+				</relation>
+				<relation id="envioTeste" dataSource="malaDiretaEnvioTeste/malaDiretaEnvioTeste" rightKey="idCampanha" dataFormatter="fieldContentMultiple" >
+					<relations>
+						<relation dataSource="user/user" 	id="user" 	 leftKey="envioPor" />
+					</relations>
+				</relation>
+				<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente"  />
+			</relations>
+			<filters>
+				<filter id="id" field="id" />
+			</filters>
+			<sort>
+				<by order="desc" field="disparadoEm" relationPath="disparo" />
+				<by order="desc" field="envioEm" relationPath="envioTeste" />
+			</sort>
+		</dataProvider> -->
+		
+	</dataProviders>
+	
+	<renderables>
+		
+		<!--
+			Renderable para gerenciar as campanhas cadastradas
+		 -->
+		<renderable id="gerenciar">
+			<dataProviders>
+				<dataProvider id="malaDiretaCampanha_lista" />
+			</dataProviders>
+			<styles>
+				<style path="listaCampanha.php" id="listaCampanha"/>
+			</styles>
+		</renderable>
+		
+		<!-- Adicionar Campanha -->
+		<renderable id="adicionarCampanha">
+			<styles>
+				<style path="adicionarCampanha.php" id="adicionarCampanha"/>
+			</styles>
+		</renderable>
+		
+		<!-- RENDER usasado para exibir o conteudo da campanha para o publico e para os modulos de mala direta -->
+		<renderable id="ml">
+			<styles>
+				<style path="ml.php" id="ml" />
+			</styles>
+		</renderable>
+		
+		<!-- 
+			DashBoard da campanha 
+			Nos traz todas as informações como "agendamentos", "envios de teste" e "disparos"
+		-->
+		<renderable id="dashboard">
+			<dataProviders>
+				<dataProvider id="malaDiretaCampanha_detalhes" />
+				<dataProvider id="malaDiretaEnvioTeste/malaDiretaEnvioTeste_lista">
+					<filterProcessor>
+						<filter by="idCampanha" param="id"/>
+					</filterProcessor>
+				</dataProvider>
+				<dataProvider id="malaDiretaAgendamento/malaDiretaAgendamento_lista">
+					<filterProcessor>
+						<filter by="idCampanha" param="id"/>
+					</filterProcessor>
+				</dataProvider>
+				<dataProvider id="malaDiretaDisparo/malaDiretaDisparo_lista">
+					<filterProcessor>
+						<filter by="idCampanha" param="id"/>
+					</filterProcessor>
+				</dataProvider>
+			</dataProviders>
+			<styles>
+				<style path="dashboard.php" id="dashboard"/>
+			</styles>
+		</renderable>
+		
+		<!-- 
+			RENDER PARA CADASTRAR UM AGENDAMENTO DE ENVIO 
+		-->		
+		<renderable id="adicionarAgendamento">
+			<dataProviders>
+				<dataProvider id="malaDiretaCampanha_detalhes" />
+			</dataProviders>
+			<styles>
+				<style path="adicionarAgendamento.php" id="adicionarAgendamento"/>
+			</styles>
+		</renderable>
+		
+		<!-- 
+			Permite disparo de uma campanha diretamente, sem passar pelo agendamento
+		-->
+		<renderable id="dispararCampanha">
+			<dataProviders>
+				<dataProvider id="malaDiretaCampanha_detalhes" />
+			</dataProviders>
+			<styles>
+				<style path="dispararCampanha.php" id="dispararCampanha" />
+			</styles>
+		</renderable>
+		
+		<!-- Editar Campanha -->
+		<renderable id="editarCampanha">
+			<dataProviders>
+				<dataProvider id="malaDiretaCampanha_detalhes" />
+				<dataProvider id="malaDiretaAgendamento/malaDiretaAgendamento_lista">
+					<filterProcessor>
+						<filter by="idCampanha" param="id" />
+					</filterProcessor>
+				</dataProvider>
+				<dataProvider id="malaDiretaDisparo/malaDiretaDisparo_lista">
+					<filterProcessor>
+						<filter by="idCampanha" param="id" />
+					</filterProcessor>
+				</dataProvider>
+			</dataProviders>
+			<styles>
+				<style path="editarCampanha.php" id="editarCampanha"/>
+			</styles>
+		</renderable>
+		
+		<!-- Informações gerais da campanha -->
+<!-- 		<renderable id="campanhaDetalhes"> -->
+<!-- 			<dataProviders> -->
+<!-- 				<dataProvider id="malaDiretaCampanha_detalhes" /> -->
+<!-- 			</dataProviders> -->
+<!-- 			<styles> -->
+<!-- 				<style path="campanhaDetalhes.php" id="campanhaDetalhes"/> -->
+<!-- 			</styles> -->
+<!-- 		</renderable> -->
+		
+		
+	</renderables>
+	
+	<actionHandlers>
+	
+		<actionHandler id="removerCampanha" datasource="malaDiretaCampanha" action="removerCampanha" />
+		<actionHandler id="malaDiretaActionPublico" datasource="malaDiretaCampanha" action="malaDiretaActionPublico" />
+		<actionHandler id="editarCampanha" datasource="malaDiretaCampanha" action="editarCampanha" />
+		
+	</actionHandlers>
+	
+</modulo>	

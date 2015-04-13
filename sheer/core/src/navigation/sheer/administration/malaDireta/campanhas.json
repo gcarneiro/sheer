@@ -1,0 +1,23 @@
+{
+	"config": {
+		"title"			: "Campanha",
+		"description"	: "Campanha de mala direta",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	"holders": {
+		"central": {
+			"malaDiretaCampanha/gerenciar": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

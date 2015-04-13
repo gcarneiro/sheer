@@ -1,0 +1,35 @@
+{
+	"publicationMetadata" 	: "publication/metadata",
+	"userGroup" 			: "accessControl/userGroup",
+	"user" 					: "accessControl/user",
+	
+	"localidade"			: "localidade",
+	
+	"variavel"				: "variavel",
+	"token"					: "token",
+	
+	"fileDocument"			: "file/document",
+	"filePicture"			: "file/picture",
+
+	"modulo"					: "modulo",
+	
+	"malaDiretaRemetente" 		: "malaDireta/remetente",
+	"malaDiretaLista" 			: "malaDireta/lista",
+	"malaDiretaListaEmail" 		: "malaDireta/listaEmail",
+	"malaDiretaListaImportacao" : "malaDireta/listaImportacao",
+
+	"malaDiretaCampanha" 		: "malaDireta/campanha",
+	"malaDiretaEnvioTeste" 		: "malaDireta/envioTeste",
+	"malaDiretaAgendamento" 	: "malaDireta/agendamento",
+	"malaDiretaDisparo" 		: "malaDireta/disparo",
+	
+	"cielo"						: "cielo",
+	"imageRepository"			: "imageRepository",
+	
+	"blog"						: "blog",
+	
+	"social"					: "social",
+	"contato"					: "contato"
+	
+	
+}

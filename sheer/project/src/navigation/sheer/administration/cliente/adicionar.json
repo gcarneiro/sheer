@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "Adicionar Cliente",
+		"description"	: "Adicionar cliente ao sistema",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"cliente/adicionarCliente": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

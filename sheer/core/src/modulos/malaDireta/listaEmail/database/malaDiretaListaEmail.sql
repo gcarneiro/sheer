@@ -1,0 +1,14 @@
+CREATE TABLE sh_ml_listaEmail(
+
+	id					CHAR(36) NOT NULL,
+	idLista				CHAR(36) NOT NULL,
+	nome				CHAR(36) NULL,
+	email				CHAR(36) NOT NULL,
+	enviar				INTEGER NOT NULL,
+	adicionadoEm 		DATETIME NOT NULL,
+	idImportacao		CHAR(36) NULL,
+	
+	CONSTRAINT SH_ML_LISTAEMAIL_PK PRIMARY KEY (id),
+	CONSTRAINT SH_ML_LISTAEMAIL_LISTA FOREIGN KEY (idLista) REFERENCES sh_ml_lista (id)
+	
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

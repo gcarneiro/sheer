@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<requisicao-cancelamento id="{{id}}" versao="1.3.0">
+	<tid>{{transacao.tid}}</tid>
+	<dados-ec>
+		<numero>{{loja.numero}}</numero>
+		<chave>{{loja.chave}}</chave>
+	</dados-ec>
+	<valor>0</valor>
+</requisicao-cancelamento>

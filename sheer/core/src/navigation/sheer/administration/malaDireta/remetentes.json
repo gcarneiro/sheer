@@ -1,0 +1,23 @@
+{
+	"config": {
+		"title"			: "Remetentes | Sheer",
+		"description"	: "Gerenciar remetentes a serem utilizados na mala direta",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	"holders": {
+		"central": {
+			"malaDiretaRemetente/listaRemetente": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

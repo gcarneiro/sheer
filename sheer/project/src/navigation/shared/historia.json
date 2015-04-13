@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "História",
+		"description"	: "História",
+		"template" 		: "route.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"paginas/historia": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

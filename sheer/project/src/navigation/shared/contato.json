@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "Contato",
+		"description"	: "Contato",
+		"template" 		: "route.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"paginas/contato": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

@@ -1,0 +1,65 @@
+CREATE TABLE sh_ml_disparo (
+
+	id 						CHAR(36) NOT NULL,
+	idCampanha				CHAR(36) NOT NULL,
+	idAgendamento			CHAR(36) NULL,
+	idRemetente				CHAR(36) NOT NULL,
+	idLista					CHAR(36) NOT NULL,
+	assunto					VARCHAR(128) NOT NULL,
+	html					TEXT NOT NULL,
+	disparadoEm				DATETIME NOT NULL,
+	total					INTEGER NOT NULL,
+	enviados				INTEGER NOT NULL,
+	
+	CONSTRAINT SH_ML_DISPARO PRIMARY KEY (id),
+	CONSTRAINT SH_ML_DISPARO_CAMPANHA_FK FOREIGN KEY (idCampanha) REFERENCES sh_ml_campanha (id),
+	CONSTRAINT SH_ML_DISPARO_REMETENTE_FK FOREIGN KEY (idRemetente) REFERENCES sh_ml_remetente (id),
+	CONSTRAINT SH_ML_DISPARO_LISTAEMAIL_FK FOREIGN KEY (idLista) REFERENCES sh_ml_lista (id),
+	CONSTRAINT SH_ML_DISPARO_AGENDAMENTO_FK FOREIGN KEY (idAgendamento) REFERENCES sh_ml_agendamento (id)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE sh_ml_disparoEmail (
+
+	id						CHAR(36) NOT NULL,
+	idContato				CHAR(36) NOT NULL,
+	idDisparo				CHAR(36) NOT NULL,
+	dataDisparo 			DATETIME NOT NULL,
+	contatoInfo				TEXT NULL,
+	
+	CONSTRAINT SH_ML_DISPAROEMAIL_PK PRIMARY KEY (id),
+	CONSTRAINT SH_ML_DISPAROEMAIL_DISPARO_FK FOREIGN KEY (idDisparo) REFERENCES sh_ml_disparo(id)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE sh_ml_disparoVisualizacao (
+
+	id						CHAR(36) NOT NULL,
+	idDisparo				CHAR(36) NOT NULL,
+	idUsuario				CHAR(36) NOT NULL,
+	adicionadoEm			DATETIME NOT NULL,
+	tipoVisualizacao		INTEGER NOT NULL,
+	
+	CONSTRAINT SH_ML_DISPAROVISUALIZACAO_PK PRIMARY KEY (id),
+	CONSTRAINT SH_ML_DISPAROVISUALIZACAO_DISPARO_FK FOREIGN KEY (idDisparo) REFERENCES sh_ml_disparo(id)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE sh_ml_disparoRemocao (
+
+	id						CHAR(36) NOT NULL,
+	idDisparo				CHAR(36) NOT NULL,
+	idUsuario				CHAR(36) NOT NULL,
+	adicionadoEm			DATETIME NOT NULL,	
+	
+	CONSTRAINT SH_ML_DISPAROREMOCAO_PK PRIMARY KEY (id),
+	CONSTRAINT SH_ML_DISPAROREMOCAO_DISPARO_FK FOREIGN KEY (idDisparo) REFERENCES sh_ml_disparo(id)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE sh_ml_disparo ADD COLUMN remocoes INTEGER NOT NULL;
+ALTER TABLE sh_ml_disparo ADD COLUMN totalVisualizacoes INTEGER NOT NULL;
+ALTER TABLE sh_ml_disparo ADD COLUMN visualizacoesUnicas INTEGER NOT NULL;

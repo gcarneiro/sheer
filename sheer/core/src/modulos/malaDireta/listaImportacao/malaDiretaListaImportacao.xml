@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Lista importação</name>
+		<description>Modulo de para importar uma lista de e-mails</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaListaImportacao" table="sh_ml_listaImportacao">
+			<fields>
+				<field id="id" 				name="Identificador" 			 	dataType="string"		required="true" 	primaryKey="true" />
+				<field id="idLista" 		name="Lista" 					 	dataType="string"		required="true" 	/>
+				<field id="importadoEm" 	name="Data da importação" 		 	dataType="datetime"		required="false" 	defaultValue="datetime.now"	/>
+				<field id="importadoPor" 	name="Importado Por" 			 	dataType="string" 		required="false"	primaryName="true"	defaultValue="user.id" />
+				<field id="total" 			name="Total Registros" 		 		dataType="integer" 		required="true"		defaultValue="0"/>
+				<field id="novos" 			name="Total Novos E-mails" 		 	dataType="integer" 		required="true"		defaultValue="0"/>
+				<field id="atualizados" 	name="Total E-mails Atualizados" 	dataType="integer" 		required="true"		defaultValue="0" />
+				<field id="ativar" 			name="Ativar" 					 	dataType="integer"		required="false" 	defaultValue="2" lookup="true" 	>
+					<options getOptionsFromVariable="\Sh\Modules\malaDiretaListaImportacao\malaDiretaListaImportacao/ativar" renderType="radio"/>
+				</field>
+				<field id="arquivo" 		name="Arquivo" 					dataType="file" 	required="true"	/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<actionHandlers>
+	
+		<!-- 
+			Método para processar e adicionar vários emails a uma lista
+		 -->
+		<actionHandler id="adicionarVariosEmails" datasource="malaDiretaListaImportacao" action="adicionarVariosEmails" />
+		
+	</actionHandlers>
+	
+</modulo>	

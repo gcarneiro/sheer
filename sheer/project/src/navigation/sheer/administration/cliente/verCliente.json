@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "Cliente",
+		"description"	: "Ver cadastro completo de cliente",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"cliente/verCliente": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

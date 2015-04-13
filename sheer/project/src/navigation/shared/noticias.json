@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "Notícias do lucas",
+		"description"	: "Notícias",
+		"template" 		: "route.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"paginas/noticias": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

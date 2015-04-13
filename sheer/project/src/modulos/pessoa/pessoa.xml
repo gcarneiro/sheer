@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Pessoas</name>
+		<description>Controlador do cadastro de pessoas.</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="pessoa" table="sim_pessoa">
+			<fields>
+				<field id="id" 				name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+			
+				<field id="nome" 			name="Nome" 				dataType="string" 	required="true" 	primaryName="true"  uppercase="true" />
+				
+				<field id="sexo" 			name="Sexo" 				dataType="string" 	setNullIfBlank="true"		lookup="true">
+					<options getOptionsFromVariable="\Sh\Modules\pessoa\pessoa/sexo" blankOption="Sexo"  />
+				</field>
+				<field id="cor" 			name="Cor" 					dataType="integer"	setNullIfBlank="true"		lookup="true" >
+					<options getOptionsFromVariable="\Sh\Modules\pessoa\pessoa/cor" blankOption="Cor" />
+				</field>
+				<field id="etnia" 			name="Etnia" 				dataType="string" 	setNullIfBlank="true"		lookup="true">
+					<options getOptionsFromVariable="\Sh\Modules\pessoa\pessoa/etniaIndígena" blankOption="Etnia"  />
+				</field>
+				<field id="escolaridade" 	name="Escolaridade" 		dataType="integer"	setNullIfBlank="true"		lookup="true" >
+					<options getOptionsFromVariable="\Sh\Modules\pessoa\pessoa/escolaridade" blankOption="Escolaridade" />
+				</field>
+				<field id="dataNascimento" 	name="Nascimento" 			dataType="date" 	setNullIfBlank="true" />
+				<field id="dataObito" 		name="Óbito" 				dataType="date" 	setNullIfBlank="true" />
+
+				<field id="estadoCivil" 	name="Estado Civil" 		dataType="integer" 	setNullIfBlank="true"		lookup="true" >
+					<options getOptionsFromVariable="\Sh\Modules\pessoa\pessoa/estadoCivil" blankOption="Estado Civil" />
+				</field>
+				<field id="profissao" 		name="Profissão" 			dataType="string" 	setNullIfBlank="true" uppercase="true" />
+				
+				<field id="registro" 		name="Prontuário" 			dataType="string" 	required="true"	/>
+				<field id="idade" 			name="Idade" 				dataType="integer"	/>
+				<field id="idadeMeses" 		name="idade em Meses" 		dataType="integer"	/>
+				
+				<field id="mae" 			name="Mãe" 					dataType="string" 	setNullIfBlank="true" uppercase="true" />
+				<field id="pai" 			name="Pai" 					dataType="string" 	setNullIfBlank="true" uppercase="true" />
+				
+				<field id="nacionalidade" 	name="Nacionalidade" 		dataType="date" 	setNullIfBlank="true" />
+				<field id="naturalUf" 		name="Natural [UF]" 		dataType="string" 	setNullIfBlank="true" />
+				<field id="naturalCidade" 	name="Natural [Cidade]" 	dataType="date" 	setNullIfBlank="true" />
+				<field id="naturalOutro" 	name="Natural [Outro]" 		dataType="string" 	setNullIfBlank="true" />
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+		<dataProvider dataSource="pessoa" id="pessoa_lista">
+			<filters>
+				<filter id="nome" field="nome" operator="likeSplit" />
+				<filter id="dataNascimento" field="dataNascimento" operator="periodPast" />
+			</filters>
+		</dataProvider>
+	</dataProviders>
+	
+	
+	<renderables>
+		<renderable id="listaPessoas">
+			<dataProviders>
+				<dataProvider id="pessoa_lista">
+					<filterProcessor>
+						<filter by="dataNascimento" defaultValue="P5Y" />
+					</filterProcessor>
+					<maxRows>10</maxRows>
+				</dataProvider>
+			</dataProviders>
+			<styles>
+				<style id="listaPessoas" path="listaPessoas.php" />
+			</styles>
+		</renderable>
+	</renderables>
+	
+</modulo>	

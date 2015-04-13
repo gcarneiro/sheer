@@ -1,0 +1,30 @@
+{
+	"config": {
+		"title"			: "Listar Clientes",
+		"description"	: "Lista de Clientes da BG",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"cliente/isListaClientes.php": {
+				"type" : "moduleTemplate"
+			},
+			"cliente/listaClientes": {
+				"wrapper" : "<div id=\"isListaClientes\">{{html}}</div>"
+			}
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

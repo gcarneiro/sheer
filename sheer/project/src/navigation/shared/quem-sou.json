@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "Quem Sou",
+		"description"	: "Quem Sou",
+		"template" 		: "route.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"paginas/quem-sou": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}

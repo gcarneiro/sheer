@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Agendamento</name>
+		<description>Modulo para agendamentos de envio de mala direta.</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaAgendamento" table="sh_ml_agendamento">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idCampanha" 			name="Campanha" 			dataType="string"	required="true" 	/>
+				<field id="idRemetente" 		name="Remetente" 			dataType="string" 	required="true" primaryName="true" >
+					<options getOptionsFromDataProvider="malaDiretaRemetente/malaDiretaRemetente_listaSimples" blankOption="Selecione" />
+				</field>
+				<field id="assunto" 			name="Assunto da Campanha" 	dataType="string" 	required="true"	/>
+				<field id="html" 				name="Campanha" 			dataType="html" 	required="true"	/>
+				<field id="idLista" 			name="Lista de E-mails" 	dataType="text" 	required="false"	>
+					<options getOptionsFromDataProvider="malaDiretaLista/malaDiretaLista_listaSimples" blankOption="Selecione" />
+				</field>
+				<field id="data" 				name="Data"		 			dataType="date" 	required="true"		/>
+				<field id="hora" 				name="Hora" 				dataType="string" 	required="true"		/>
+				<field id="status" 				name="Status" 				dataType="integer" 	required="false"	 defaultValue="2"	lookup="true">
+					<options getOptionsFromVariable="\Sh\Modules\malaDiretaAgendamento\malaDiretaAgendamento/status" blankOption="Selecione"  />
+				</field>
+				<field id="criadoPor" 			name="Criado Por" 			dataType="string" 		required="false" 	defaultValue="user.id"	/>
+				<field id="criadoEm" 			name="Criado Em" 			dataType="datetime" 	required="false"	defaultValue="datetime.now"	/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Customizo o detalhes para trazer o remetente
+		 -->
+		 <dataProvider id="malaDiretaAgendamento_detalhes" dataSource="malaDiretaAgendamento">
+		 	<relations>
+		 		<relation id="criador" dataSource="user/user" leftKey="criadoPor" />
+		 		<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+		 		<relation id="lista" dataSource="malaDiretaLista/malaDiretaLista" leftKey="idLista" />
+		 	</relations>
+		 	<filters>
+		 		<filter id="id" field="id" required="true"/>
+		 	</filters>
+		 </dataProvider>
+		 
+		  <!-- 
+		 	Customizo o lista para:
+		 		- Trazer as informações do remetente
+		 		- Filtrar pela campanha (IN)
+		 		- Filtrar por status (IN) - Somente Realizados e Pendentes
+		 		
+		  -->
+		 <dataProvider id="malaDiretaAgendamento_lista" dataSource="malaDiretaAgendamento">
+		 	<relations>
+		 		<relation id="criador" dataSource="user/user" leftKey="criadoPor" />
+		 		<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+		 		<relation id="lista" dataSource="malaDiretaLista/malaDiretaLista" leftKey="idLista" />
+		 	</relations>
+		 	<filters>
+		 		<filter id="idCampanha" field="idCampanha" 	operator="in" />
+		 		<filter id="status" 	field="status" 		operator="in" defaultValue="1,2" />
+		 	</filters>
+		 </dataProvider>
+	
+	
+		 <!-- DATAPROVIDER UTLIZADO NO JOB DE DISPARAR EMAILS -->
+		 <dataProvider id="agendamentoPendente" dataSource="malaDiretaAgendamento" >
+		 	<filters>
+		 		<filter id="status" field="status" defaultValue="2" />
+		 		<filter id="data" field="data" required="false" operator="lessOrEqual" />
+		 	</filters>
+		 </dataProvider>
+		 
+	</dataProviders>
+	
+	<renderables>
+		
+		<!-- RENDER para exibir os detalhes do agendamento -->
+		<renderable id="detalhesAgendamento">
+			<dataProviders>
+				<dataProvider id="malaDiretaAgendamento_detalhes" />
+			</dataProviders>
+			<styles>
+				<style path="detalhesAgendamento.php" id="detalhesAgendamento"/>
+			</styles>
+		</renderable>
+		
+	</renderables>
+	
+	<actionHandlers>
+		<!-- 
+			Renderable para cadastramento de um novo agendamento
+		 -->
+		<actionHandler id="adicionarAgendamento" datasource="malaDiretaAgendamento" action="adicionarAgendamento" />
+		<actionHandler id="cancelarAgendamento"  datasource="malaDiretaAgendamento" action="cancelarAgendamento" />
+	</actionHandlers>
+	
+	<jobs>
+		<job id="enviarAgendamento"/>
+	</jobs>
+</modulo>	

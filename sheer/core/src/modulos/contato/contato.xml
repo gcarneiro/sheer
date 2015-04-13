@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Controle de Acesso/Permissões</name>
+		<description>Gerenciador de regras de acesso dispostas no sistema.</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="destino" table="sh_contatoDestino">
+			<fields>
+				<field id="id" 			name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="nome" 		name="Nome" 				dataType="string" 	required="true" 	primaryName="true" />
+				<field id="email" 		name="Email" 				dataType="email" 	required="true"	 />
+				<field id="alias" 		name="Alias" 				dataType="string" 	required="true"	 />
+				<field id="removivel" 	name="Removivel" 			dataType="integer" 	defaultValue="1" lookup="true">
+					<options getOptionsFromVariable="\Sh\LibraryFieldOptions/simNao" />
+				</field>
+			</fields>
+		</datasource>
+		
+		<datasource id="contato" table="sh_contato">
+			<fields>
+				<field id="id" 				name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idDestino" 		name="Destino" 				dataType="string"	required="true">
+					<options getOptionsFromDataProvider="contato/destino_listaSimples" />
+				</field>
+				<field id="localizador" 	name="Localizador" 			dataType="string"	required="true" />
+				
+				<field id="nome" 			name="Nome" 				dataType="string" 	required="true" 	primaryName="true" />
+				<field id="telefone" 		name="Telefone" 			dataType="string"	 />
+				<field id="email" 			name="Email" 				dataType="email" 	required="true"	 />
+
+				<field id="idCidade" 		name="Cidade" 				dataType="string" >
+					<options getOptionsFromDataProvider="localidade/listaCidadesPorEstado" />
+				</field>
+				<field id="idEstado" 		name="Estado" 				dataType="string" >
+					<options getOptionsFromDataProvider="localidade/uf_listaSimples" />
+				</field>
+				
+				<field id="assunto" 		name="Assunto" 				dataType="string" />
+				<field id="mensagem" 		name="Mensagem" 			dataType="text" 	required="true"	 />
+				
+				<field id="enviadoEm" 		name="Enviado Em" 			dataType="datetime" 	defaultValue="datetime.now"	 />
+				<field id="ip" 				name="Ip Origem" 			dataType="string" 	defaultValue="user.ip"	 />
+				<field id="arquivado" 		name="Arquivado" 			dataType="integer" 	defaultValue="2" lookup="true"	 >
+					<options getOptionsFromVariable="\Sh\LibraryFieldOptions/simNao" />
+				</field>
+				<field id="enviado" 		name="Enviado" 			dataType="integer" 	defaultValue="2" lookup="true"	 >
+					<options getOptionsFromVariable="\Sh\LibraryFieldOptions/simNao" />
+				</field>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Customizo para poder filtrar por idDestino e também por não arquivados apenas
+		 -->
+		<dataProvider id="contato_lista" dataSource="contato" >
+			<relations>
+				<relation id="destino" dataSource="contato/destino" leftKey="idDestino" />
+			</relations>
+			<filters>
+				<filter id="idDestino" 		field="idDestino" />
+				<filter id="nome" 			field="nome" 		operator="likeSplit" />
+				<filter id="email" 			field="email" 		operator="likeSplit" />
+				<filter id="arquivado" 		field="arquivado" 	defaultValue="2" />
+			</filters>
+			<sort>
+				<by order="desc" field="enviadoEm"/>
+			</sort>
+		</dataProvider>
+	
+		<!-- 
+			DataProvider para buscar um destino por seu alias
+		 -->
+		<dataProvider id="destino_loadByAlias" dataSource="destino" >
+			<filters>
+				<filter id="alias" field="alias" required="true"/>
+			</filters>
+			<maxRows>1</maxRows>
+		</dataProvider>
+	
+	</dataProviders>
+	
+	<renderables>
+	
+		<!-- 
+			Gerenciar os destinos possíveis
+		 -->
+		<renderable id="contato_gerenciar">
+			<dataProviders>
+				<dataProvider id="contato_lista"/>
+			</dataProviders>
+			<styles>
+				<style id="contato_gerenciar" path="contato_gerenciar.php"/>
+			</styles>
+		</renderable>
+
+		<!-- 
+			Gerenciar os destinos possíveis
+		 -->
+		<renderable id="contato_adicionar">
+			<dataProviders>
+				<dataProvider id="destino_lista"/>
+			</dataProviders>
+			<styles>
+				<style id="contato_adicionar" path="contato_adicionar.php"/>
+			</styles>
+		</renderable>
+		
+		<!-- 
+			Gerenciar os destinos possíveis
+		 -->
+		<renderable id="destino_gerenciar">
+			<dataProviders>
+				<dataProvider id="destino_lista"/>
+			</dataProviders>
+			<styles>
+				<style id="destino_gerenciar" path="destino_gerenciar.php"/>
+			</styles>
+		</renderable>
+		
+		<!-- 
+			Adicionar um destino
+		 -->
+		<renderable id="destino_adicionar">
+			<styles>
+				<style id="destino_adicionar" path="destino_adicionar.php"/>
+			</styles>
+		</renderable>
+		<!-- 
+			Editar um destino
+		 -->
+		<renderable id="destino_editar">
+			<dataProviders>
+				<dataProvider id="destino_detalhes" />
+			</dataProviders>
+			<styles>
+				<style id="destino_editar" path="destino_editar.php"/>
+			</styles>
+		</renderable>
+	
+	</renderables>
+	
+	<actionHandlers>
+	
+		<!-- 
+			Customizo o add padrao para destino para gerar o alias automaticamente
+		 -->
+		<actionHandler id="destino_add" 	datasource="destino" action="destino_adicionar" />
+		<actionHandler id="destino_delete" 	datasource="destino" action="destino_delete" />
+		<!-- 
+			Customizo o add padrao para contato para gerar localizador, enviar email e outras operacoes 
+		 -->
+		<actionHandler id="contato_add" datasource="contato" action="contato_adicionar" greencard="true" >
+			<permissions default="acceptAll" />
+		</actionHandler>
+		<!-- 
+			ActionHandler para arquivar o contato
+		 -->
+		<actionHandler id="contato_arquivar" datasource="contato" action="contato_arquivar" />
+		
+	</actionHandlers>
+	
+	
+</modulo>	
+
+
+<!-- 
+
+ -->

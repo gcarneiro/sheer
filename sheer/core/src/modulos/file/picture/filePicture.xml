@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Controle de Imagens do Sheer</name>
+		<description>Gerenciador das imagens do Sheer. Cada imagem a ser operado pelo Sheer deverá passar por este controlador.</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="filePicture" table="sh_filePicture">
+			<fields>
+				<field id="id" 				name="Identificador" 		dataType="string"		required="true" 	primaryKey="true" />
+				<field id="name" 			name="Nome" 				dataType="string" 		required="true"		primaryName="true" />
+				<field id="nameFull" 		name="Nome Completo" 		dataType="string" 		required="true"	 />
+				<field id="nameExt" 		name="Extensão" 			dataType="string" 							setNullIfBlank="true" />
+				<field id="adicionadoEm" 	name="Data" 				dataType="datetime" 						defaultValue="datetime.now" />
+				<field id="adicionadoPor" 	name="Usuário" 				dataType="string" 		setNullIfBlank="true"	 />
+				<field id="atualizadoEm" 	name="Data" 				dataType="datetime" 						defaultValue="datetime.now" />
+				<field id="atualizadoPor" 	name="Usuário" 				dataType="string" 		setNullIfBlank="true"	 />
+				<field id="downloads" 		name="Nome" 				dataType="integer" 							defaultValue="0" />
+				<field id="mimeType" 		name="MimeType" 			dataType="string" 		setNullIfBlank="true" />
+				<field id="remove" 			name="Remover" 				dataType="integer" 		defaultValue="2" />
+				<field id="picsMap" 		name="Mapa de imagens" 		dataType="string" 		required="false" />
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- Customização especial do detalhes do fileDocument para sempre trazer o downloadLink -->
+		<dataProvider id="filePicture_detalhes" dataSource="filePicture" dataParser="filePictureParser">
+			<filters>
+				<filter id="id" field="id" required="true"/>
+			</filters>
+		</dataProvider>
+		
+		<!-- Customização especial do lista do fileDocument para sempre trazer o downloadLink -->
+		<dataProvider id="filePicture_lista" dataSource="filePicture" dataParser="filePictureParser">
+			<filters>
+				<filter id="remove" field="remove" />
+				<filter id="remove" field="remove" defaultValue="2" />
+			</filters>
+		</dataProvider>
+	
+	</dataProviders>
+	
+	
+	<actionHandlers>
+	
+		<!-- ActionHandler customizado para inserir um novo arquivo -->
+		<actionHandler id="filePicture_add" datasource="filePicture" action="filePicture_add" />
+		
+		<!-- 
+			ActionHandler para podermos adicionar uma imagem diretamente sem nenhum processamento anterior.
+			Ele só precisa receber no campo "image" os dados da imagem vinda de um upload 
+		-->
+		<actionHandler id="adicionarImagemDireta" datasource="filePicture" action="adicionarImagemDireta" />
+	
+	</actionHandlers>
+	
+<!-- 	<jobs> -->
+<!-- 		<job id="executarRemocaoDocumentos"/> -->
+<!-- 	</jobs> -->
+	
+</modulo>	

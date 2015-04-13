@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Controle de Acesso/Permissões</name>
+		<description>Gerenciador de regras de acesso dispostas no sistema.</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="role" table="sh_role">
+			<fields>
+				<field id="id" 				name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="alias" 			name="Grupo de Usuários" 	dataType="string" 	required="true" 	primaryName="true" />
+				<field id="description" 	name="Nome" 				dataType="string" 	setNullIfBlank="true"	 />
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	
+</modulo>	

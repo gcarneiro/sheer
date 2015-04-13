@@ -1,0 +1,28 @@
+{
+	"config": {
+		"title"			: "Listas de e-mails | Sheer",
+		"description"	: "Gerenciar listas de emails a serem utilizados na mala direta",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	"holders": {
+		"central": {
+			"malaDiretaLista/isLista.php" : {
+				"type" : "moduleTemplate"
+			},
+			"malaDiretaLista/gerenciar" : {
+				"wrapper" : "<div id=\"listas\">{{html}}</div>"
+			}
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

@@ -1,0 +1,25 @@
+{
+	"config": {
+		"title"			: "Dashboard",
+		"description"	: "Dashboard de cliente",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	
+	"holders": {
+		"central": {
+			"cliente/dashboard": true
+		}
+		
+	},
+	
+	"passports" : {
+		
+	}
+
+}
