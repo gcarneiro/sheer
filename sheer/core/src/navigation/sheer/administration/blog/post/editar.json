@@ -1,0 +1,18 @@
+{
+	"config": {
+		"title"			: "Editar Post | Blog",
+		"description"	: "Editar um post no blog",
+		"template" 		: "sheer-default.php"
+	},
+
+	"holders": {
+		"central": {
+			"blog/post_update": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

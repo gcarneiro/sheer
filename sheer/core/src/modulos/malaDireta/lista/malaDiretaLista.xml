@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Lista</name>
+		<description>Modulo gerenciador de listas de emails</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaLista" table="sh_ml_lista">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="nome" 				name="Nome" 				dataType="string"	required="true" 	primaryName="true" />
+				<field id="criadoEm" 			name="Data de Criação" 		dataType="datetime"	required="false" 	defaultValue="datetime.now"	/>
+				<field id="criadoPor" 			name="Criaddo Por" 			dataType="string" 	required="false"	defaultValue="user.id" />
+				<field id="totalEmails" 		name="Total de E-mails" 	dataType="integer" 	required="false"	defaultValue="0"/>
+				<field id="totalHabilitados" 	name="Total Habilitados" 	dataType="integer" 	required="false"	defaultValue="0"/>
+				<field id="tipo" 				name="Tipo" 				dataType="integer"	required="false" 	defaultValue="1" lookup="true"	>
+					<options getOptionsFromVariable="\Sh\Modules\malaDiretaLista\malaDiretaLista/tipo"/>
+				</field>
+
+				<field id="host" 				name="Servidor" 				dataType="string" 	required="false"	/>
+				<field id="username" 			name="Usuário" 					dataType="string" 	required="false"	/>
+				<field id="password" 			name="Senha" 					dataType="string" 	required="false"	/>
+				<field id="databaseName" 		name="Banco de Dados" 			dataType="string" 	required="false"	/>
+				<field id="databaseTable" 		name="Tabela" 					dataType="string" 	required="false"	/>
+				<field id="fieldNome" 			name="Campo nome" 				dataType="string" 	required="false"	/>
+				<field id="fieldEmail" 			name="Campo Email" 				dataType="string" 	required="false"	/>
+				<field id="fieldEnviar" 		name="Campo Enviar" 			dataType="string" 	required="false"	/>
+				<field id="fieldEnviarValor" 	name="Valor Positivo Enviar" 	dataType="string" 	required="false"	/>
+			</fields>
+		</datasource>
+		
+		<!-- 
+			Controle de sincronização de listas complexas
+		 -->
+		<datasource id="malaDiretaListaSincronizacao" table="sh_ml_listaSincronizacao">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idLista" 			name="Lista" 				dataType="string"	required="true" 	primaryName="true" />
+				<field id="sincronizadoEm" 		name="Sincronização" 		dataType="datetime"	required="false"	defaultValue="datetime.now"  />
+				<field id="total" 				name="Total" 				dataType="integer"	required="true"  />
+				<field id="novos" 				name="Novos" 				dataType="integer"	required="true"  />
+				<field id="atualizados" 		name="Atualizados" 			dataType="integer"	required="true"  />
+			</fields>
+			
+			<addons>
+				<publicationHistory enabled="false"/>
+				<publicationMetadata enabled="false"/>
+				<imageRepository enabled="false"/>
+			</addons>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Customizo a lista para trazer as informações do usuário criador e também das sincronizacoes da lista
+		 -->
+		<dataProvider id="malaDiretaLista_lista" dataSource="malaDiretaLista">
+			<relations>
+				<relation id="user" 		dataSource="user/user" leftKey="criadoPor" />
+				<relation id="sincronia" 	dataSource="malaDiretaLista/malaDiretaListaSincronizacao" rightKey="idLista" />
+			</relations>
+			<filters>
+				<filter id="id" 	field="id" 		operator="in"/>
+			</filters>
+			<sort>
+				<by field="nome" order="asc"/>
+				<by field="sincronizadoEm" order="desc" relationPath="sincronia"/>
+			</sort>
+		</dataProvider>
+		
+		<!-- 
+			Customizo o detalhes para trazer as informações do usuário criador e também das sincronizacoes da lista
+		 -->
+		<dataProvider id="malaDiretaLista_detalhes" dataSource="malaDiretaLista">
+			<relations>
+				<relation id="user" dataSource="user/user" leftKey="criadoPor" />
+				<relation id="sincronia" 	dataSource="malaDiretaLista/malaDiretaListaSincronizacao" rightKey="idLista" />
+			</relations>
+			<filters>
+				<filter id="id" field="id" required="true" />
+			</filters>
+			<sort>
+				<by field="sincronizadoEm" order="desc" relationPath="sincronia"/>
+			</sort>
+		</dataProvider>
+		
+	</dataProviders>
+	
+	<renderables>
+		
+		<!-- 
+			Gerenciar as listas de emails 
+		-->
+		<renderable id="gerenciar">
+			<dataProviders>
+				<dataProvider id="malaDiretaLista_lista" />
+			</dataProviders>
+			<styles>
+				<style path="gerenciar.php" id="gerenciar"/>
+			</styles>
+		</renderable>
+		
+		<!-- RENDER para adicionar uma nova lista -->
+		<renderable id="adicionarLista">
+			<styles>
+				<style path="adicionarLista.php" id="adicionarLista"/>
+			</styles>
+		</renderable>
+		
+	</renderables>
+	
+	<actionHandlers>
+		<!-- 
+			ActionHandler para recalcular o totalHabilitados e o totalEmails
+		 -->
+		<actionHandler id="recalcularTotalHabilitados" datasource="malaDiretaLista" action="recalcularTotalHabilitados" />
+
+		<!-- 
+			ActionHandler para sincronizar uma lista complexa
+		 -->
+		<actionHandler id="sincronizarLista" datasource="malaDiretaLista" action="sincronizarLista" />
+		
+	</actionHandlers>
+	
+</modulo>	

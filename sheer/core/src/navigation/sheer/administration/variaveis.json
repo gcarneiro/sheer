@@ -1,0 +1,18 @@
+{
+	"config": {
+		"title"			: "Variáveis de sistema e ambiente | Sheer",
+		"description"	: "Administração de variáveis de sistema e ambiente do Sheer",
+		"template" 		: "sheer-default.php"
+	},
+
+	"holders": {
+		"central": {
+			"variavel/gerenciarEmLista": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

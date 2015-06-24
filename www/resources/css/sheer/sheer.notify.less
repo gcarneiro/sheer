@@ -1,0 +1,94 @@
+/*
+ * Sheer Notify
+ */
+div#sh-notify {
+	
+	display: block;
+	width: 0px;
+	height: 0px;
+	overflow: visible;
+	
+	> div#sh-notify-tl, > div#sh-notify-tr, > div#sh-notify-bl, > div#sh-notify-br, > div#sh-notify-tc {
+		position: fixed;
+		display: inline-block;
+		overflow: visible;
+		z-index: 1000000;
+		
+		&#sh-notify-tl {
+			top: 0px;
+			left: 10px;
+		}
+		&#sh-notify-tr {
+			top: 0px;
+			right: 10px;
+		}
+		&#sh-notify-bl {
+			bottom: 10px;
+			left: 10px;
+		}
+		&#sh-notify-br {
+			bottom: 10px;
+			right: 10px;
+		}
+		&#sh-notify-tc {
+			width: 100%;
+			max-height: 0px;
+			top: 0px;
+			> div {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+		
+		/*
+		 * Notificacoes
+		 */
+		> div {
+			position: relative;
+			width: 400px;
+			min-height: 40px;
+			margin-top: 0.3em;
+			margin-bottom: 0.5em;
+			padding: 0.5em;
+			box-shadow: 0 6px 6px -6px #777;
+			text-align: center;
+			
+			color: #7e8068;
+			background-color: #fbfed3;
+			border: 1px solid #e2e5b6;
+
+			
+			/*
+			 * Botao de fechar
+			 */
+			> span.sh-notify-close {
+				position: absolute;
+				top: 0; right: 0;
+				width: 15px; height: 15px;
+				line-height: 0.8em;
+				padding: 0 0.2em;
+				background-color: #e2e5b6;
+				cursor: pointer;
+			}
+			
+			&.success {
+				color: #6f824b;
+				background-color: #e2f3c6;
+				border-color: #6f824b;
+				> span.sh-notify-close {
+					background-color: #6f824b;
+					color: #e2f3c6;
+				}
+			}
+			&.fail {
+				color: #c82119;
+				background-color: #ffdcda;
+				border-color: #c82119;
+				> span.sh-notify-close {
+					background-color: #c82119;
+					color: #ffdcda;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"config": {
+		"title"			: "Documentação Sheer",
+		"description"	: "Documentação Sheer",
+		"template" 		: "sheer-default.php",
+		
+		"scripts" : {
+		}
+	},
+
+	"holders": {
+	
+	},
+	
+	"passports" : {
+		
+	}
+
+}

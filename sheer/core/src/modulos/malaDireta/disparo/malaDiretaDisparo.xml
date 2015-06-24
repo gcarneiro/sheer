@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Disparo</name>
+		<description>Modulo para controlar os disparos de mala direta</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaDisparo" table="sh_ml_disparo">
+			<fields>
+				<field id="id" 					name="Identificador" 			dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idCampanha" 			name="Campanha" 				dataType="string"	required="true" 	/>
+				<field id="idAgendamento" 		name="Agendamento" 				dataType="string"	required="false"  	lookup="true"	>
+					<options getOptionsFromDataProvider="malaDiretaAgendamento/malaDiretaAgendamento_listaSimples" blankOption="Selecione" />
+				</field>
+				<field id="idRemetente" 		name="Remetente" 				dataType="string" 		required="true" primaryName="true" >
+					<options getOptionsFromDataProvider="malaDiretaRemetente/malaDiretaRemetente_listaSimples" blankOption="Selecione" />
+				</field>
+				<field id="assunto" 			name="Assunto da Campanha" 		dataType="string" 		required="true"	/>
+				<field id="html" 				name="Campanha" 				dataType="html" 		required="true"	/>
+				<field id="disparadoEm" 		name="Data de disparo"			dataType="datetime" 	required="false"	defaultValue="datetime.now"	/>
+				<field id="total" 				name="Total de envios" 			dataType="string" 		required="true"		defaultValue="0"/>
+				<field id="enviados" 			name="Enviados com Sucesso" 	dataType="integer" 		required="false" 	defaultValue="0"/>
+				<field id="remocoes" 			name="Nº de remoções" 			dataType="integer" 		required="false" 	defaultValue="0"/>
+				<field id="totalVisualizacoes" 	name="Total de Visualizações" 	dataType="integer" 		required="false" 	defaultValue="0"/>
+				<field id="visualizacoesUnicas" name="Visualizações Únicas" 	dataType="integer" 		required="false" 	defaultValue="0"/>
+			</fields>
+		</datasource>
+		
+		<datasource id="malaDiretaDisparoEmail" table="sh_ml_disparoEmail">
+			<fields>
+				<field id="id" 					name="Identificador" 				dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idDisparo" 			name="iD disparo" 					dataType="string"	required="true" 	 />
+				<field id="idContato" 			name="iD Contato" 					dataType="string"	required="true" 	primaryName="true" />
+				<field id="dataDisparo" 		name="Data de Disparo" 				dataType="datetime"	required="true" 	primaryName="true" defaultValue="datetime.now" />
+				<field id="contatoInfo" 		name="Informações do contato" 		dataType="text"		required="false" 	 />
+			</fields>
+			
+			<addons>
+				<publicationHistory enabled="false"/>
+				<publicationMetadata enabled="false"/>
+			</addons>
+		</datasource>
+		
+ 		<datasource id="malaDiretaDisparoVisualizacao" table="sh_ml_disparoVisualizacao">
+			<fields>
+				<field id="id" 					name="Identificador" 				dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idDisparo" 			name="iD disparo" 					dataType="string"	required="true" 	 />
+				<field id="idUsuario" 			name="iD Contato" 					dataType="string"	required="true" 	primaryName="true" />
+				<field id="adicionadoEm" 		name="Adicionado Em" 				dataType="datetime"	required="true" 	defaultValue="datetime.now"	 />
+				<field id="tipoVisualizacao" 	name="Tipo de Visualização" 		dataType="integer"	required="true" 	 >
+					<options getOptionsFromVariable="\Sh\Modules\malaDiretaCampanha\malaDiretaDisparoVisualizacao/tipoVisualizacao" />
+				</field>
+			</fields>
+			
+			<addons>
+				<publicationHistory enabled="false"/>
+				<publicationMetadata enabled="false"/>
+			</addons>
+		</datasource>
+		
+		<datasource id="malaDiretaDisparoRemocao" table="sh_ml_disparoRemocao">
+			<fields>
+				<field id="id" 					name="Identificador" 				dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idDisparo" 			name="iD disparo" 					dataType="string"	required="true" 	 />
+				<field id="idUsuario" 			name="iD Contato" 					dataType="string"	required="true" 	primaryName="true" />
+				<field id="adicionadoEm" 		name="Adicionado Em" 				dataType="datetime"		required="true" 	 />
+			</fields>
+			
+			<addons>
+				<publicationHistory enabled="false"/>
+				<publicationMetadata enabled="false"/>
+			</addons>
+		</datasource>
+		 
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Customizo o detalhes para trazer as informações do remetente e da lista
+		 -->
+		<dataProvider id="malaDiretaDisparo_detalhes" dataSource="malaDiretaDisparo">
+			<relations>
+				<relation id="disparoLista" dataSource="malaDiretaDisparoLista/malaDiretaDisparoLista" rightKey="idDisparo" dataFormatter="fieldContentMultiple">
+					<relations>
+						<relation id="lista" dataSource="malaDiretaLista/malaDiretaLista" leftKey="idLista" />
+					</relations>
+				</relation>
+				<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+			</relations>
+			<filters>
+				<filter id="id" field="id" required="true"/>
+			</filters>
+		</dataProvider>
+	
+		<!-- 
+			Customizo a lista para poder filtrar por idCamapanha
+		 -->
+		<dataProvider id="malaDiretaDisparo_lista" dataSource="malaDiretaDisparo">
+			<relations>
+				<relation id="disparoLista" dataSource="malaDiretaDisparoLista/malaDiretaDisparoLista" rightKey="idDisparo" dataFormatter="fieldContentMultiple">
+					<relations>
+						<relation id="lista" dataSource="malaDiretaLista/malaDiretaLista" leftKey="idLista" />
+					</relations>
+				</relation>
+				<relation id="remetente" dataSource="malaDiretaRemetente/malaDiretaRemetente" leftKey="idRemetente" />
+				<relation id="disparoVisualizacao" dataSource="malaDiretaDisparo/malaDiretaDisparoVisualizacao" rightKey="idDisparo" dataFormatter="fieldContentMultiple" />
+				<relation id="disparoRemocao" dataSource="malaDiretaDisparo/malaDiretaDisparoRemocao" rightKey="idDisparo" dataFormatter="fieldContentMultiple"/>
+				<relation id="agendamento" dataSource="malaDiretaAgendamento/malaDiretaAgendamento" leftKey="idAgendamento" />
+			</relations>
+			<filters>
+				<filter id="idCampanha" field="idCampanha" operator="in" />
+			</filters>
+			<sort>
+				<by field="disparadoEm" order="desc"/>
+			</sort>
+		</dataProvider>
+		
+		<!-- 
+			Este dataProvider customizado irá computar a visualizacao alternativa do email e irá exibir na tela o html da campanha
+		 -->
+		<dataProvider id="visualizacaoAlternativa" dataSource="malaDiretaDisparo" contentProvider="visualizacaoAlternativa" />
+		<!-- 
+			Este dataProvider customizado irá gerar a remocao de um email da lista e tambem informar ao usuário o seu sucesso
+		 -->
+		<dataProvider id="removerEmail" dataSource="malaDiretaDisparo" contentProvider="removerEmail" />
+		
+		<!-- 
+			Utilizado para recuperar emails para o envio. Busca da fila de emails, limitando em 200
+		-->
+		<dataProvider id="emailsParaDisparo" dataSource="malaDiretaDisparoEmail">
+			<filters>
+				<filter id="dataDisparo" field="dataDisparo" parameter="dataDisparoNaoMudar" defaultValue="datetime.now" operator="less"/>
+			</filters>
+			<sort>
+				<by order="asc" field="dataDisparo"/>
+			</sort>
+			<maxRows>200</maxRows>
+		</dataProvider>
+		
+		<!-- DATAPROVIDER  usado no action de exibir conteudo para o publico. Uso para verificar se já foi feita a inserção de remoção 
+		
+			REMOVER ESTE EM 30/11/2014
+		-->
+		<dataProvider id="disparoRemocaoPorUsuario" dataSource="malaDiretaDisparoRemocao">
+			<filters>
+				<filter id="idUsuario" field="idUsuario" required="true" />
+			</filters>
+		</dataProvider>
+		
+		<!-- 
+			Customizo o DP padrão para poder filtrar por idDisparo e também por idUsuario
+		 -->
+		<dataProvider id="malaDiretaDisparoVisualizacao_lista" dataSource="malaDiretaDisparoVisualizacao">
+			<filters>
+				<filter id="idDisparo" field="idDisparo" />
+				<filter id="idUsuario" field="idUsuario" />
+			</filters>
+		</dataProvider>
+
+		<!-- 
+			Customizo o DP padrão para poder filtrar por idDisparo e também por idUsuario
+		 -->
+		<dataProvider id="malaDiretaDisparoRemocao_lista" dataSource="malaDiretaDisparoRemocao">
+			<filters>
+				<filter id="idDisparo" field="idDisparo" />
+				<filter id="idUsuario" field="idUsuario" />
+			</filters>
+		</dataProvider>
+		
+<!-- 		<dataProvider id="disparoEmailPorContato" dataSource="malaDiretaDisparoEmail"> -->
+<!-- 			<filters> -->
+<!-- 				<filter id="idContato" field="idContato" />			 -->
+<!-- 			</filters> -->
+<!-- 		</dataProvider> -->
+		
+		<!-- DATAPROVIDER utilizado para editar a campanha -->
+<!-- 		<dataProvider id="disparoPorCampanha" dataSource="malaDiretaDisparo"> -->
+<!-- 			<filters> -->
+<!-- 				<filter id="idCampanha" field="idCampanha" /> -->
+<!-- 			</filters> -->
+<!-- 		</dataProvider> -->
+			
+		
+	</dataProviders>
+	
+	<renderables>
+	
+		<!-- 
+			Renderable para gerar a visualização alternativa do email
+			Este irá marcar uma visualização e irá exibir o html na tela
+		 -->
+		<renderable id="visualizacaoAlternativa">
+			<dataProviders>
+				<dataProvider id="visualizacaoAlternativa" />
+			</dataProviders>
+			<styles>
+				<style path="visualizacaoAlternativa.php" id="visualizacaoAlternativa" />
+			</styles>
+		</renderable>
+		
+		<!-- 
+			Renderable para gerar a remoção do email da newsletter e informar ao usuário que a remoção foi efetuada
+		 -->
+		<renderable id="removerEmail">
+			<dataProviders>
+				<dataProvider id="removerEmail" />
+			</dataProviders>
+			<styles>
+				<style path="removerEmail.php" id="removerEmail" />
+			</styles>
+		</renderable>
+	
+	</renderables>
+	
+	<actionHandlers>
+		<!-- 
+			Dispara uma mala direta. Este irá puxar todos os emails da lista e inserir na fila de envio
+		 -->
+		<actionHandler id="dispararMalaDireta" datasource="malaDiretaDisparo" action="dispararMalaDireta" />
+		
+		<!-- 
+			ActionHandler para marcar uma visualização de email no disparo
+		 -->
+		<actionHandler id="visualizacaoEmail" datasource="malaDiretaDisparo" action="marcarVisualizacaoNoEmail" greencard="true">
+			<permissions default="acceptAll" />
+		</actionHandler>
+	</actionHandlers>
+	
+	<jobs>
+		<job id="dispararEmails" excludeFromCron="true" />
+	</jobs>
+	
+</modulo>	

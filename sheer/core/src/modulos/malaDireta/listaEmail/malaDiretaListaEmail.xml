@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Lista de Email</name>
+		<description>Modulo de para gerenciar os e-mails de uma lista</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaListaEmail" table="sh_ml_listaEmail">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idLista" 			name="ID da Lista" 			dataType="string"	required="true" 	/>
+				<field id="idContato" 			name="ID do contato" 		dataType="string" 	required="true"		primaryName="true" />
+				<field id="enviar" 				name="Habilitado" 			dataType="integer" 	required="false" 	defaultValue="1" lookup="true"	>
+					<options getOptionsFromVariable="\Sh\Modules\malaDiretaListaEmail\malaDiretaListaEmail/enviar"  />
+				</field>
+				<field id="adicionadoEm" 		name="Data da adição" 		dataType="datetime" required="false"	defaultValue="datetime.now"/>
+				<field id="idImportacao" 		name="ID da Importação " 	dataType="string" 	required="false"	/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- 
+			Customizando renderable de lista para se relacionar com o módulo de email
+		 -->
+		 <dataProvider id="malaDiretaListaEmail_lista" dataSource="malaDiretaListaEmail">
+		 	<relations>
+		 		<relation id="contato" dataSource="malaDiretaContato/malaDiretaContato" leftKey="idContato" />
+		 	</relations>
+			<filters>
+				<filter id="idLista" 	field="idLista"		required="true" />
+				<filter id="idConato" 	field="idContato"	 />
+				<filter id="nome" 		field="nome" 		operator="likeSplit" relationPath="contato" />
+				<filter id="email" 		field="email" 		operator="likeSplit" relationPath="contato" />
+				<filter id="enviar" 	field="enviar" 		operator="equal" />
+			</filters>
+			<sort>
+				<by order="asc" field="enviar"/>
+				<by order="asc" field="nome" relationPath="contato"/>
+				<by order="asc" field="email" relationPath="contato"/>
+			</sort>
+			<maxRows>100</maxRows>
+		</dataProvider>
+		
+		
+		 <!-- 
+		 	ANTES DA MUDANCA DE ESTRUTURA PARA SEPARAR OS CONTATOS
+		  -->
+	
+		<!-- 
+			Recupera os emails de uma lista de emails
+			Limitado em 100 emails
+		-->
+		<dataProvider id="emailsPorLista" dataSource="malaDiretaListaEmail">
+			<relations>
+		 		<relation id="contato" dataSource="malaDiretaContato/malaDiretaContato" leftKey="idContato" />
+		 	</relations>
+			<filters>
+				<filter id="idLista" 	field="idLista"		required="true" />
+				<filter id="nome" 		field="nome" 		operator="likeSplit" relationPath="contato"/>
+				<filter id="email" 		field="email" 		operator="likeSplit" relationPath="contato" />
+				<filter id="enviar" 	field="enviar" 		operator="equal" />
+			</filters>
+			<sort>
+				<by order="asc" field="enviar"/>
+				<by order="asc" field="nome" 	relationPath="contato"/>
+				<by order="asc" field="email"	 relationPath="contato"/>
+			</sort>
+			<maxRows>100</maxRows>
+		</dataProvider>
+		
+		<!-- 
+			Recupera os emails de uma lista de emails
+			Retorna todos os registros cadastrados
+		-->
+		<dataProvider id="emailsPorLista_ilimitado" dataSource="malaDiretaListaEmail">
+			<relations>
+		 		<relation id="contato" dataSource="malaDiretaContato/malaDiretaContato" leftKey="idContato" />
+		 	</relations>
+			<filters>
+				<filter id="idLista" 	field="idLista"		required="true" 	 operator="in"/>
+				<filter id="nome" 		field="nome" 		operator="likeSplit" relationPath="contato"/>
+				<filter id="email" 		field="email" 		operator="likeSplit" relationPath="contato"/>
+				<filter id="enviar" 	field="enviar" 		operator="equal" />
+			</filters>
+			<sort>
+				<by order="asc" field="enviar"/>
+				<by order="asc" field="nome" 	relationPath="contato"/>
+				<by order="asc" field="email" 	relationPath="contato"/>
+			</sort>
+			<maxRows>0</maxRows>
+		</dataProvider>
+		
+	</dataProviders>
+	
+	<renderables>
+		
+		<!-- RENDER para a lista de emails -->
+		<renderable id="listaEmails">
+			<dataProviders>
+				<dataProvider id="malaDiretaListaEmail/malaDiretaListaEmail_lista" />
+			</dataProviders>
+			<styles>
+				<style path="gerenciar.php" id="gerenciar"/>
+			</styles>
+		</renderable>
+		
+		<!-- RENDER que carrega apenas as informações da lista. 
+			Utilizado na pagina de emailLista junto a interface "listaEmails"
+		 -->
+		<renderable id="infoLista">
+			<dataProviders>
+				<dataProvider id="malaDiretaLista/malaDiretaLista_detalhes" >
+					<filterProcessor>
+						<filter by="id" param="idLista" />
+					</filterProcessor>
+				</dataProvider>
+			</dataProviders>
+			<styles>
+				<style path="infoLista.php" id="infolista" />
+			</styles>
+		</renderable>
+		
+		<!-- RENDER para adicionar um email na lista -->
+		<renderable id="adicionarEmail">
+			<styles>
+				<style path="adicionarEmail.php" id="adicionarEmail"/>
+			</styles>
+		</renderable>
+		
+		<!-- RENDER para adicionar vários na lista -->
+		<renderable id="adicionarVariosEmails">
+			<styles>
+				<style path="adicionarVariosEmails.php" id="adicionarVariosEmails"/>
+			</styles>
+		</renderable>
+		
+		<!-- RENDER para adicionar um email na lista -->
+		<renderable id="editarEmail">
+			<dataProviders>
+				<dataProvider id="malaDiretaListaEmail_detalhes" />
+			</dataProviders>
+			<styles>
+				<style path="editarEmail.php" id="editarEmail"/>
+			</styles>
+		</renderable>
+		
+	</renderables>
+	
+	<actionHandlers>
+		<actionHandler id="adicionarEmail" datasource="malaDiretaListaEmail" action="adicionarEmail" greencard="true">
+			<permissions default="acceptAll" />
+		</actionHandler>
+		<actionHandler id="removerEmail" datasource="malaDiretaListaEmail" action="removerEmail" />
+		<actionHandler id="habilitarDesabilitarEmail" datasource="malaDiretaListaEmail" action="habilitarDesabilitarEmail" />
+		<actionHandler id="editarEmail" datasource="malaDiretaListaEmail" action="editarEmail" />
+		
+		<!-- ActionHandler especial inicialmente utilizado apenas para a sincronização de listas -->
+		<actionHandler id="adicionarContato" datasource="malaDiretaListaEmail" action="adicionarContato" greencard="true">
+			<permissions default="acceptAll" />
+		</actionHandler>
+	</actionHandlers>
+	
+</modulo>	

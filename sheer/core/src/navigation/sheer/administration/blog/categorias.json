@@ -1,0 +1,18 @@
+{
+	"config": {
+		"title"			: "Categorias | Blog",
+		"description"	: "Gerencie as categorias do blog",
+		"template" 		: "sheer-default.php"
+	},
+
+	"holders": {
+		"central": {
+			"blog/categoria_lista": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

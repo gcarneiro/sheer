@@ -1,0 +1,60 @@
+{
+	
+	"project" : {
+		"id" 			: "Sheer",
+		"name" 			: "Sheer",
+		"domain" 		: "ip;ip;ip",
+		"domainPath"	: "",
+		"description"	: "Sheer - Plataforma de desenvolvimento"
+	},
+	
+	"settings": {
+		"database" : {
+			"logAllQuerys" : false
+		}
+	},
+	
+	"database" : {
+		
+		"default" : {
+			"driver"	: "mysql",
+			"host"		: "localhost",
+			"username"	: "root",
+			"password"	: "",
+			"database"	: "sheer_140806"
+		}
+		
+	},
+	
+	"mailer" : {
+		
+		"default" : {
+			
+			"host"		: "",
+			"username"	: "",
+			"password"	: ""
+			
+		}
+		
+	},
+	
+	"facebook" : {
+		"enable"	: false,
+		"appId"		: "{your-facebook-app-id}",
+		"appSecret"	: "{your-facebook-app-id}"
+	},
+	
+	"instagram" : {
+		"enable"	: false,
+		"appId"		: "{your-facebook-app-id}",
+		"appSecret"	: "{your-facebook-app-id}"
+	},
+	
+	"google" : {
+		"enable"	: false,
+		"appId"		: "{your-facebook-app-id}",
+		"appSecret"	: "{your-facebook-app-id}",
+		"apiKey"	: "{your-facebook-app-id}"
+	}
+
+}

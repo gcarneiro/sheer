@@ -1,0 +1,23 @@
+{
+	"config": {
+		"title"			: "Lista de E-mails",
+		"description"	: "Lista de campanhas de mala direta",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	"holders": {
+		"central": {
+			"malaDiretaCampanha/listaCampanha": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

@@ -1,0 +1,19 @@
+{
+	"config": {
+		"title"			: "Administração | Sheer",
+		"description"	: "Administração das funcionalidades do Sheer",
+		"template" 		: "sheer-default.php",
+		
+		"scripts" : {
+		}
+	},
+
+	"holders": {
+	
+	},
+	
+	"passports" : {
+		
+	}
+
+}

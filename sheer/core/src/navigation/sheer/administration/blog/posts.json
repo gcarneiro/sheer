@@ -1,0 +1,18 @@
+{
+	"config": {
+		"title"			: "Posts | Blog",
+		"description"	: "Gerencie os posts do blog",
+		"template" 		: "sheer-default.php"
+	},
+
+	"holders": {
+		"central": {
+			"blog/post_lista": true
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

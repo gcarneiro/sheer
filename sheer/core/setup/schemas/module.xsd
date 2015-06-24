@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<!-- 
+		Elemento principal do Módulo
+	 -->
+	<xs:element name="modulo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="info" />
+				<xs:element name="datasources" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="datasource" maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dataProviders" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="dataProvider" maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="renderables" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="renderable" maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="actionHandlers" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="actionHandler" maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="jobs" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="job" maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- 
+		Elemento que define as informações do Módulo
+	 -->
+	<xs:element name="info">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="description" type="xs:string" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- 
+		Elemento do sistema que define as informações dos DataSources do módulo
+	 -->
+	<xs:element name="datasource">
+		<xs:complexType>
+			<xs:sequence>
+<!-- 				<xs:element name="key" minOccurs="0" maxOccurs="0"> -->
+<!-- 					<xs:complexType> -->
+<!-- 						<xs:sequence> -->
+<!-- 							<xs:element name="field" maxOccurs="unbounded"> -->
+<!-- 								<xs:complexType> -->
+<!-- 									<xs:sequence /> -->
+<!-- 									<xs:attribute name="id" use="required" /> -->
+<!-- 								</xs:complexType> -->
+<!-- 							</xs:element> -->
+<!-- 						</xs:sequence> -->
+<!-- 					</xs:complexType> -->
+<!-- 				</xs:element> -->
+				<xs:element name="fields">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="field" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="options" minOccurs="0" maxOccurs="1">
+											<xs:complexType>
+												<xs:sequence />
+												<xs:attribute name="getOptionsFromDataProvider" use="optional" >
+													<xs:annotation>
+														<xs:documentation>
+															A ser utilizado para descrever que as opções para esse campo devem vir através de um DataProvider. 
+															Deverá ser enviado o alias do DP "idModule/idDataProvider".
+														</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="getOptionsFromVariable" use="optional" >
+													<xs:annotation>
+														<xs:documentation>
+															A ser utilizado para descrever que as opções para esse campo devem vir através de uma variavel descrita dentro de uma classe. A classe deve pertencer ao namespace "Sh";
+															\Sh\className::variable. Deverá ser enviado sendo o alias da variavel "className/variable" 
+														</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="keyName" use="optional">
+													<xs:annotation>
+														<xs:documentation>
+															Determina o identificador do campo que deverá ser utilizado como valor. Deverá ser utilizado somente com "getOptionsFromDataProvider"
+														</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="valueName" use="optional" >
+													<xs:annotation>
+														<xs:documentation>
+															Determina o identificador do campo que deverá ser utilizado como lookup. Deverá ser utilizado somente com "getOptionsFromDataProvider"
+														</xs:documentation>
+													</xs:annotation>
+												</xs:attribute> 
+												<xs:attribute name="renderType" use="optional" default="select" >
+													<xs:annotation>
+														<xs:documentation>
+															Descreve qual deverá ser a opção em branco a ser utilizada para iniciar o "select"
+														</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="select" />
+															<xs:enumeration value="radio" />
+															<xs:enumeration value="checkbox" />
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute> 
+												<xs:attribute name="blankOption" use="optional" >
+													<xs:annotation>
+														<xs:documentation>
+															Descreve qual deverá ser a opção em branco a ser utilizada para iniciar o "select"
+														</xs:documentation>
+													</xs:annotation>
+												</xs:attribute> 
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="pictures" minOccurs="0" maxOccurs="1">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="map" minOccurs="1" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence />
+															<xs:attribute name="id" use="required" />
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id"				use="required"	type="xs:string" />
+									<xs:attribute name="name"			use="required" 	type="xs:string" />
+									<xs:attribute name="dataType"		use="required" 	type="fieldDataTypes" 	>
+										<xs:annotation>
+											<xs:documentation>
+												Determina o tipo do campo a ser interpretado pelo Sheer.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="required"		use="optional" 	type="boolean" 			default="false" >
+										<xs:annotation>
+											<xs:documentation>
+												Determina se o campo é obrigatório para o registro. Quando este for considerado como obrigatório o defaultValue é desconsiderado.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="setNullIfBlank" use="optional" 	type="boolean" 			default="true" >
+										<xs:annotation>
+											<xs:documentation>
+												Determina se o campo irá setar NULL no banco quando o valor não for recebido ou for "".
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="primaryKey"	use="optional" 	type="boolean" 			default="false" >
+										<xs:annotation>
+											<xs:documentation>
+												Determina se o campo será a chave primaria do DataSource.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="primaryName"	use="optional" 	type="boolean" 			default="false" >
+										<xs:annotation>
+											<xs:documentation>
+												Determina se o campo irá conter o valor principal para visualização do Field.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="defaultValue"	use="optional" >
+										<xs:annotation>
+											<xs:documentation>
+												Este campo irá determinar o valor default do campo. Este valor pode assumir um valor literal ou algum especial que será traduzido pelo Sheer.
+												Valores aceitos:
+													Verificar em Sheer.Library.RuntimeAliasValues como utilizar.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="lookup"	use="optional" default="false" type="boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Determina se o Sheer deverá tentar buscar uma tradução para este campo.
+												Se o campo tiver descritos os seus options a partir de um DataProvider ele irá gerar normalmente.
+												Em caso de trazer as informações de um outro módulo,
+													este lookup somente será avaliado se houver registrado no DataProvider um relacionamento válido para este field.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="mask" >
+										<xs:annotation>
+											<xs:documentation>
+												Determina se o campo terá uma máscara para input dos dados.
+											</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="cep" />
+												<xs:enumeration value="cpf" />
+												<xs:enumeration value="date" />
+												<xs:enumeration value="datetime" />
+												<xs:enumeration value="time" />
+												<xs:enumeration value="telefone" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									
+									<xs:attribute name="uppercase" type="boolean" default="false" >
+										<xs:annotation>
+											<xs:documentation>Determina se o campo deverá utilizar os valores todos formatados em upperCase</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="lowercase" type="boolean" default="false" >
+										<xs:annotation>
+											<xs:documentation>Determina se o campo deverá utilizar os valores todos formatados em lowerCase</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="addons" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="publicationHistory" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence />
+									<xs:attribute name="enabled" type="xs:boolean" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="publicationMetadata" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence />
+									<xs:attribute name="enabled" type="xs:boolean" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="imageRepository" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:sequence>
+											<xs:element name="map" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:sequence />
+													<xs:attribute name="id" use="required" />
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:sequence>
+									<xs:attribute name="enabled" type="xs:boolean" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" use="required" type="xs:string" />
+			<xs:attribute name="table" use="required" type="xs:string" />
+			<xs:attribute name="parser" use="optional" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>
+						Este deverá indicar qual a classe responsável por fazer parser nos dados. 
+						Esse parser será aaplicado em qualquer recuperação de conteúdo desse dataSource.
+						Este valor pode ser enviado de forma completa, com os namespaces "\Sh\Modules\XXXX\XXXX" ou de forma direta se estiver no namespace do módulo "XXXX".
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="dataProvider">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="description" minOccurs="0" />
+				<xs:element name="relations" type="dataProviderRelations" minOccurs="0" />
+				<xs:element name="filters" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="filter" type="dataProviderFilter" minOccurs="1" maxOccurs="unbounded" />
+							<xs:element name="customQuery" type="xs:string" minOccurs="0" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>
+										Este será um modelo customizado para gerarmos a query final do filtro. Você poderá utilizar os modelos de comparacao como deseja.
+										Exemplo: {idFilter} AND {idFilter} AND ( {idFilter} OR {idFilter} ) AND {idFilter}
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="group" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>
+							Esse elemento serve parar mapear agrupamentos de registros do banco de dados. Não há controle sobre qual registro dos agrupados será retornado.
+						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="by" minOccurs="1" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="relationPath" use="optional">
+										<xs:annotation>
+											<xs:documentation>
+												Se o campo não for enviado ou o seu valor for vazio, iremos assumir que o relationPath é o root, sendo o dataSource Principal
+												Em caso contrário iremos utilizar o field com id declarado do path da relação
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="field" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="sort" minOccurs="0" type="sortConfig" />
+				<xs:element name="maxRows" type="xs:integer" minOccurs="0" default="25">
+					<xs:annotation>
+						<xs:documentation>
+							Determine aqui o número de registros primários que o dataProvider deve trazer. Se setado para 0 o dataProvider trará ilimitados registros. Tome cuidado com esta opção.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" use="required" />
+			<xs:attribute name="dataSource" use="required" />
+			<xs:attribute name="dataParser" use="optional">
+				<xs:annotation>
+					<xs:documentation>Este irá determinar o parser a ser aplicado após os dados terem sido recuperados. Por padrão não será aplicado parser nenhum, mas com este configurado os dados irão passar por este antes de serem retornados pelo ContentProvider</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="contentProvider" use="optional">
+				<xs:annotation>
+					<xs:documentation>Este é o responsável por total possível uma total customização do seu dataProvider. Ele irá chamar um contentProvider customizado que poderá executar qualquer tipo de operação de busca de dados</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="renderable">
+		<xs:complexType>
+			<xs:sequence>
+<!-- 				<xs:element name="dataSources" minOccurs="0"> -->
+<!-- 					<xs:complexType> -->
+<!-- 						<xs:sequence> -->
+<!-- 							<xs:element name="dataSource" maxOccurs="unbounded"> -->
+<!-- 								<xs:complexType> -->
+<!-- 									<xs:sequence /> -->
+<!-- 									<xs:attribute name="id" use="required"> -->
+<!-- 										<xs:annotation> -->
+<!-- 											<xs:documentation>Referencia o dataSource que deve lido os seus campos</xs:documentation> -->
+<!-- 										</xs:annotation> -->
+<!-- 									</xs:attribute> -->
+<!-- 								</xs:complexType> -->
+<!-- 							</xs:element> -->
+<!-- 						</xs:sequence> -->
+<!-- 					</xs:complexType> -->
+<!-- 				</xs:element> -->
+				<xs:element name="dataProviders" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="dataProvider" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="filterProcessor" minOccurs="0" >
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="filter" minOccurs="0" maxOccurs="unbounded" >
+														<xs:complexType>
+															<xs:sequence />
+															<xs:attribute name="by" 			use="required"  />
+															<xs:attribute name="param" 			use="optional"  />
+															<xs:attribute name="defaultValue" 	use="optional"  />
+															<xs:attribute name="required" 		use="optional" type="xs:boolean"  />
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="function" use="optional">
+													<xs:annotation>
+														<xs:documentation>Este irá efetuar operações nos dados que serão utilizados como filtros do DataProvider. Esta deve ser uma função instanciada dentro do Namespace do módulo.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="sort" 	minOccurs="0" type="sortConfig" />
+										<xs:element name="maxRows" 	minOccurs="0" type="xs:integer" />
+									</xs:sequence>
+									<xs:attribute name="id" use="required">
+										<xs:annotation>
+											<xs:documentation>Referencia o dataProvider que deve ser carregado</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="filterProcessor" use="optional">
+										<xs:annotation>
+											<xs:documentation>Este irá efetuar operações nos dados que serão utilizados como filtros do DataProvider. Esta deve ser uma função instanciada dentro do Namespace do módulo.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+<!-- 									<xs:attribute name="dataProcessor" use="optional"> -->
+<!-- 										<xs:annotation> -->
+<!-- 											<xs:documentation>Determina o responsável por processar os dados antes de enviar ao renderable. Este deve ser um método declarado dentro da classe de referência do módulo</xs:documentation> -->
+<!-- 										</xs:annotation> -->
+<!-- 									</xs:attribute> -->
+								</xs:complexType>
+								
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="styles" minOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="style" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence />
+									<xs:attribute name="id" use="required">
+										<xs:annotation>
+											<xs:documentation>
+												Neste campo você poderá utilizar identificadores para estilos padrões Sheer. Neste caso o Sheer ignorará o path atribuido a ele.
+												Os estilos padrões são:
+													Nenhum estilo padrão disponível
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="path" use="required" />
+									<xs:attribute name="default" use="optional" type="boolean">
+										<xs:annotation>
+											<xs:documentation>Define se o estilo é o estilo padrão para o Renderable. Ele será utilizado caso não seja passado o estilo desejado</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" use="required" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="actionHandler">
+		<xs:complexType>
+			<xs:sequence>
+				<!-- Permissões -->
+				<xs:element name="permissions" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="perm" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence />
+									<xs:attribute name="profile" use="required" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Este será o alias do profile para qual deseja configurar o acesso</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="accept" use="optional" type="xs:boolean" default="true"  />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="default" default="denyGuest">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="acceptAll">
+										<xs:annotation>
+											<xs:documentation>Este irá aceitar qualquer pessoa para realizar aquela ação</xs:documentation>
+										</xs:annotation>
+									</xs:enumeration>
+									<xs:enumeration value="denyGuest" >
+										<xs:annotation>
+											<xs:documentation>Este irá negar a ação por parte de guest e irá aceitar qualquer outra</xs:documentation>
+										</xs:annotation>
+									</xs:enumeration>
+									<xs:enumeration value="denyAll" >
+										<xs:annotation>
+											<xs:documentation>Este irá negar para qualquer tentativa.</xs:documentation>
+										</xs:annotation>
+									</xs:enumeration>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<!-- Fields -->
+				<xs:element name="fields" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence />
+									<xs:attribute name="id" use="required">
+										<xs:annotation>
+											<xs:documentation>
+												Id do field utilizado no DataSource em questão
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="required"		use="optional" 	type="boolean" 			default="false" >
+										<xs:annotation>
+											<xs:documentation>
+												[Quando não determinado irá assumir o valor do field do datasource]
+												Determina se o campo é obrigatório para o registro. Quando este for considerado como obrigatório o defaultValue é desconsiderado.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="setNullIfBlank" use="optional" 	type="boolean">
+										<xs:annotation>
+											<xs:documentation>
+												[Quando não determinado irá assumir o valor do field do datasource]
+												Determina se o campo irá setar NULL no banco quando o valor não for recebido ou for "".
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="defaultValue"	use="optional" >
+										<xs:annotation>
+											<xs:documentation>
+												[Quando não determinado irá assumir o valor do field do datasource]
+												Este campo irá determinar o valor default do campo. Este valor pode assumir um valor literal ou algum especial que será traduzido pelo Sheer.
+												Valores aceitos:
+													Verificar em Sheer.Library.RuntimeAliasValues como utilizar.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="extend" type="boolean" default="true">
+							<xs:annotation>
+								<xs:documentation>
+									Determina se deverá extender e reconfigurar os fields do DataSource ou irá simplesmente só considerar os fields descritos no ActionHandler.
+									O PrimaryKey não será considerado neste processo. Ele sempre deverá estar presente e não serão considerados reconfigurações.
+								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" use="required" />
+			<xs:attribute name="datasource" use="required">
+				<xs:annotation>
+					<xs:documentation>
+						Este determina qual datasource receberá a operação de ação.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="action" use="required">
+				<xs:annotation>
+					<xs:documentation>
+						Determina qual será o action a ser utilizado para processar esse actionHandler.
+						Por padrão o sistema possui alguns pré-configurados ["add", "update", "delete"]. 
+						Caso não seja setado nenhum deles o Sheer irá tentar instanciar uma classe com o nome passado. \Sh\"Action".
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="greencard" use="optional" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation>
+						Determina se todas as ações geradas em consequência dessa devem receber um greencard. Isto significa que a permissão dessa ação será suficiente para declar qualquer ação cascateada.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- 
+		Bloco que controla os cron|tarefasAgendadas do módulo
+	 -->
+	<xs:element name="job">
+		<xs:complexType>
+			<xs:sequence />
+			<xs:attribute name="id" 				use="required" />
+			<xs:attribute name="excludeFromCron" 	use="optional" default="false" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>
+						Este irá determinar se esse job deve ou não ser executado junto ao execAllJobs utilizado pelo cron
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- 
+		Nó de configurações para sort utilizado nos dataProviders, tanto dentro do renderable quanto diretamente no dataProvider
+	 -->
+	<xs:complexType name="sortConfig">
+		<xs:sequence>
+			<xs:element name="by" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence />
+					<xs:attribute name="relationPath" use="optional">
+						<xs:annotation>
+							<xs:documentation>
+								Se o campo não for enviado ou o seu valor for vazio, iremos assumir que o relationPath é o root, sendo o dataSource Principal
+								Em caso contrário iremos utilizar o field com id declarado do path da relação
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="field" use="required" />
+					<xs:attribute name="order" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="asc" />
+								<xs:enumeration value="desc" />
+								<xs:enumeration value="random">
+									<xs:annotation>
+										<xs:documentation>
+											Cuidado ao utilizar esta forma de ordenação. Este modelo é extremamente de baixo desempenho.
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- 
+		Elementos de filtros a serem utilizados pelos dataProviders
+	-->
+	<xs:complexType name="dataProviderFilter">
+		<xs:sequence />
+		<xs:attribute name="id" 			type="xs:string" 	use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Este identificador é necessário para identificar o filtro em questão. Ele será utilizado no customQuery
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="relationPath" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Se o campo não for enviado ou o seu valor for vazio, iremos assumir que o relationPath é o root, sendo o dataSource Principal
+					Em caso contrário iremos utilizar o field com id declarado do path da relação
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="field" 			type="xs:string" 	use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Identificador do campo a ser comparado.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="parameter" 			type="xs:string" 						use="optional" />
+		<xs:attribute name="required" 			type="boolean" 							use="optional" 	default="false" />
+		<xs:attribute name="useNullIfBlank" 	type="boolean" 							use="optional" 	default="false">
+			<xs:annotation>
+				<xs:documentation>Este campo serve para determinar que quando o filtro for OBRIGATÓRIO e o valor para o filtro não tenha sido passado. Iremos utilizar o filtro buscando por NULL.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="defaultValue" 	type="xs:string" 						use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Este campo irá determinar o valor default do campo. Este valor pode assumir um valor literal ou algum especial que será traduzido pelo Sheer.
+					Valores aceitos:
+						Verificar em Sheer.Library.RuntimeAliasValues como utilizar.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="operator" 		type="dataProviderFilterOperators"		use="optional" 	default="equal" />
+		<xs:attribute name="dateFunction" 	type="dataProviderFilterDateFunction"	use="optional" />
+		<!-- 
+			FIXME devo implementar aqui a classe customizada para tratar do filtro	
+		-->
+	</xs:complexType>
+	
+	<!-- 
+		Operadores de comparações disponíveis para os filtros
+	-->
+	<xs:simpleType name="dataProviderFilterOperators">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="equal" />
+			<xs:enumeration value="like" />
+			<xs:enumeration value="likeSplit">
+				<xs:annotation>
+					<xs:documentation>
+						Iremos capturar o elemento a ser filtrado e iremos quebrar em todos os espaços substituindo-os por %
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+<!-- 			<xs:enumeration value="likeSufix" /> -->
+<!-- 			<xs:enumeration value="likePrefix" /> -->
+			<xs:enumeration value="greater" />
+			<xs:enumeration value="greaterOrEqual" />
+			<xs:enumeration value="less" />
+			<xs:enumeration value="lessOrEqual" />
+			<xs:enumeration value="different" />
+			
+			<!-- 
+				Operadores de conjunto
+			 -->
+			<xs:enumeration value="in">
+				<xs:annotation>
+					<xs:documentation>
+						Aceita tanto arrays quanto strings. No source apenas strings funcionam.
+						A string deve conter os valores separados por ',' ou ';'. Não é possível filtrar por sequências
+						que contenham esses símbolos por string, apenas pelo array.
+						Caso o campo a comparar seja inteiro e o valor passado seja uma string, o
+						filtro se comporta de maneira indefinida - testes mostraram que ele vai filtrar pelo valor zero
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="notIn">
+				<xs:annotation>
+					<xs:documentation>
+						Ver IN
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<!-- 
+				Operadores NULL
+			 -->
+			<xs:enumeration value="isNull">
+				<xs:annotation>
+					<xs:documentation>
+						Este filtro irá ignorar todos os valores passados e irá comparar se o campo é NULL apenas
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="isNotNull" >
+				<xs:annotation>
+					<xs:documentation>
+						Este filtro irá ignorar todos os valores passados e irá comparar se o campo não é NULL apenas
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<!-- 
+				Operador periodFuture
+			 -->
+			<xs:enumeration value="periodFuture">
+				<xs:annotation>
+					<xs:documentation>
+						Este operador deverá receber uma string de intervalo do "ISO8601 durations" (http://en.wikipedia.org/wiki/Iso8601#Durations).
+						Este irá buscar em relação a um campo de datetime ou date um período a partir de hoje até a data de hoje somada ao intervalo passado.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<!-- 
+				Operador periodPast
+			 -->
+			<xs:enumeration value="periodPast">
+				<xs:annotation>
+					<xs:documentation>
+						Este operador deverá receber uma string de intervalo do "ISO8601 durations" (http://en.wikipedia.org/wiki/Iso8601#Durations).
+						Este irá buscar em relação a um campo de datetime ou date um período a partir de hoje até a data de hoje subtraida ao intervalo passado.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+			<!-- 
+				Operador dataFimValido
+			 -->
+			<xs:enumeration value="dataFimValido">
+				<xs:annotation>
+					<xs:documentation>
+						Este operador é customizado especialmente para os campos de "dataFim". Este irá considerar se o campo é NULL ou se o valor é menor que a data de hoje.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- 
+		Funções para tratamento de valores de data
+	-->
+	<xs:simpleType name="dataProviderFilterDateFunction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="date" />
+			<xs:enumeration value="year" />
+			<xs:enumeration value="month" />
+			<xs:enumeration value="day" />
+			<xs:enumeration value="hour" />
+			<xs:enumeration value="minute" />
+			<xs:enumeration value="second" />
+			<xs:enumeration value="dayMonth" />
+			<xs:enumeration value="monthYear" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="dataProviderRelations">
+		<xs:sequence>
+			<xs:element name="relation" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="relations" type="dataProviderRelations" minOccurs="0" />
+					</xs:sequence>
+					<xs:attribute name="id" 		use="required" type="xs:string" />
+					<xs:attribute name="dataSource" use="required" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>
+								Este campo irá mapear o dataSource que será relacionado ao dataSource principal do seu context (Seja ela o principal do dataProvider ou o dataSource do relacionamento pai).
+								O seu valor deve vir no formato "idModulo/idDataSource"
+							</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="leftKey" type="xs:string" />
+					<xs:attribute name="rightKey" type="xs:string" />
+					<xs:attribute name="rightName" type="xs:string" />
+					<xs:attribute name="dataFormatter" use="optional" default="fieldContent">
+						<xs:annotation>
+							<xs:documentation>
+								Este irá determinar em que formato os dados serão formatados para retorno. Por padrão será assumido o fieldContent
+								Em caso de "inlineContentPrefix", o último conteudo relacionado será inserido diretamente no array de dados. As suas chaves serão organizadas sendo "idRelation_fieldId"
+									Este caso é destinado aos mapeamento 1x1 
+								Em caso de "fieldContent", será aberto uma nova chave no array de resposta, com chave = idRelation, e lá dentro estará gravado o último registro daquele relacionamento
+									Este caso é destinado aos mapeamento 1x1 
+								Em caso de "fieldContentMultiple", será aberto uma nova chave no array de resposta, com chave = idRelation, e lá dentro será um array com todos os conteudo relacionados
+									Este caso é destinado aos mapeamentos 1xN
+								Em caso de "relatedContent", o relacionamento estará presente dentro de uma casa chamada 'relatedContent', em um elemento com id sendo o idRelation. Neste modelo os dados serão alocados diretamente no idRelation
+									Este caso é destinado aos mapeamento 1x1 
+								Em caso de "relatedContentMultiple", o relacionamento estará presente dentro de uma casa chamada 'relatedContent', em um elemento com id sendo o idRelation. Neste modelo os dados serão alocados em um array sendo a chave o seu primaryKey
+									Este caso é destinado aos mapeamento 1xN
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="inlineContentPrefix" />
+								<xs:enumeration value="fieldContent" />
+								<xs:enumeration value="fieldContentMultiple" />
+								<xs:enumeration value="relatedContent" />
+								<xs:enumeration value="relatedContentMultiple" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="fieldDataTypes">
+		<xs:restriction base="xs:string">
+		
+			<xs:enumeration value="integer" />
+			<xs:enumeration value="decimal" />
+			<xs:enumeration value="float" />
+			<xs:enumeration value="dinheiro" />
+			
+			<xs:enumeration value="string" />
+			<xs:enumeration value="email" />
+			<xs:enumeration value="text" />
+			<xs:enumeration value="html" />
+			
+			<xs:enumeration value="date" />
+			<xs:enumeration value="datetime" />
+			
+			<xs:enumeration value="file" />
+			<xs:enumeration value="image" />
+		
+<!-- 			<xs:pattern value="integer|decimal|float|string|text|html|date|datetime" /> -->
+<!-- 			<xs:pattern value="integer|decimal|float|string|text|html|date|datetime|(class:[a-Z]*)" /> -->
+			
+			<!-- 
+			FALTANTES
+			<xs:enumeration value="password" />
+			
+			<xs:enumeration value="image" />
+			 -->
+		</xs:restriction>
+		
+	</xs:simpleType>
+	
+	<xs:simpleType name="boolean">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true" />
+			<xs:enumeration value="false" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	
+	
+</xs:schema>

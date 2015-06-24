@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name> Token para Links do Disparo</name>
+		<description>Modulo de controle de tokens para link</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaDisparoLink" table="sh_ml_disparoLink">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"		required="true" 				primaryKey="true" />
+				
+				<field id="link" 				name="Link" 				dataType="string"		required="true" 				primaryName="true"/>
+				<field id="total"	 			name="Total de Clicks"	 	dataType="integer" 		defaultValue="0"				/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<actionHandlers>
+	   
+	   <actionHandler id="verificarLink" datasource="malaDiretaDisparoLink" action="verificarLink" greencard="true">
+	   		<permissions default="acceptAll" />
+	   </actionHandler>
+	   
+	</actionHandlers>
+	
+</modulo>	

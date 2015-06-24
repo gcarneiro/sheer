@@ -1,0 +1,9 @@
+CREATE TABLE sh_ml_propriedade (
+
+	id				CHAR(36) 		NOT NULL,
+	nome			VARCHAR(32) 	NOT NULL,
+	alias			VARCHAR(8) 		NOT NULL,
+	
+	CONSTRAINT SH_ML_PROPRIEDADE_PK PRIMARY KEY (id)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

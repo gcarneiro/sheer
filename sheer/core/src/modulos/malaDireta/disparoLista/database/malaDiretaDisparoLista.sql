@@ -1,0 +1,13 @@
+CREATE TABLE sh_ml_disparoLista (
+
+	id					CHAR(36) NOT NULL,
+	idLista				CHAR(36) NOT NULL,
+	idAgendamento		CHAR(36) NULL,
+	idDisparo			CHAR(36) NULL,
+	
+	CONSTRAINT SH_ML_DISPARO_LISTA PRIMARY KEY (id),
+	CONSTRAINT SH_ML_LISTA_FK FOREIGN KEY (idLista) REFERENCES sh_ml_lista (id),
+	CONSTRAINT SH_ML_AGENDAMENTO_FK FOREIGN KEY (idAgendamento) REFERENCES sh_ml_agendamento (id),
+	CONSTRAINT SH_ML_DISPARO_FK FOREIGN KEY (idDisparo) REFERENCES sh_ml_disparo (id)
+
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

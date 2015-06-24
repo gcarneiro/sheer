@@ -1,0 +1,28 @@
+{
+	"config": {
+		"title"			: "Contatos Únicos",
+		"description"	: "Contatos disponíveis para mala direta",
+		"template" 		: "sheer-default.php",
+		"styles" 		: {
+		},
+		"scripts" 		: {
+		}
+		
+	},
+
+	"holders": {
+		"central": {
+			"malaDiretaContato/isContatos.php": {
+				"type" : "moduleTemplate"
+			},
+			"malaDiretaContato/listar": {
+				"wrapper" : "<div id=\"listaContatos\">{{html}}</div>"
+			}
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

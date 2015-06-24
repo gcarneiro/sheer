@@ -1,0 +1,23 @@
+{
+	"config": {
+		"title"			: "Localidades | Sheer",
+		"description"	: "Administração de localidades do Sheer",
+		"template" 		: "sheer-default.php"
+	},
+
+	"holders": {
+		"central": {
+			"localidade/isGerenciarBairros.php": {
+				"type" : "moduleTemplate"
+			},
+			"localidade/gerenciarBairros": {
+				"wrapper" : "<div id=\"listaBairros\">{{html}}</div>"
+			}
+		}
+	},
+	
+	"passports" : {
+		
+	}
+
+}

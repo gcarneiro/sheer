@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Registro de Usuários</name>
+		<description>Controlador dos usuários cadastrados e com acessos ao sistema</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="transacao" table="sh_cieloTransacao">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idCliente" 			name="Id Cliente" 			dataType="string"	required="false" />
+				<field id="idToken" 			name="Id Token" 			dataType="string"	required="false" />
+				<field id="loja" 				name="Loja" 				dataType="string" 	required="false"/>
+				<field id="ordem" 				name="Número Ordem" 		dataType="string" 	required="false"	primaryName="true" />
+				<field id="localizador" 		name="Localizador" 			dataType="string" 	required="true" 	 />
+				<field id="tid" 				name="TID" 					dataType="string" 	required="false"	setNullIfBlank="true"  />
+				<field id="modalidade" 			name="Modalidade" 			dataType="integer" 	required="true"   >
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/modalidade" />
+				</field>
+				<field id="bandeira" 			name="Bandeira" 			dataType="string" 	required="true"  >
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/bandeira" />
+				</field>
+				<field id="parcelas" 			name="Parcelas" 			dataType="integer" 	required="false"	defaultValue="1"  />
+				<field id="valor" 				name="Valor" 				dataType="dinheiro" required="true"  />
+				<field id="linkPagamento" 		name="Link Pagamento" 		dataType="string" 	required="false"  />
+				<field id="linkRetorno" 		name="Link Retorno" 		dataType="string" 	required="false"  />
+				<field id="status" 				name="Status" 				dataType="integer" 	required="false"	defaultValue="1"  >
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/statusTransacao" />
+				</field>
+				<field id="statusCielo" 		name="Status Cielo" 		dataType="integer" 	required="false"	defaultValue="1"  >
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/statusCielo" />
+				</field>
+				
+				<field id="descricao" 				name="Descrição" 			dataType="string"	 />
+				<field id="faturaDescricao" 		name="Descrição Fatura" 	dataType="string"	 />
+				<field id="modalidadeComunicacao" 	name="Modalidede de Com." 	dataType="integer"	required="true"	defaultValue="1" lookup="true">
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/modalidadeComunicacao" />
+				</field>
+				<field id="dadoAuxiliar" 			name="Dados Auxiliares" 	dataType="string"	 />
+				<field id="softDescriptor" 			name="Descrição Boleto" 	dataType="string"	 />
+				<field id="criadoEm" 				name="Criado Em" 			dataType="datetime" 	defaultValue="datetime.now"	 />
+			</fields>
+		</datasource>
+		
+		<!-- 
+			DataSource responsável por guardar todas as sincronizações de transações com a CIELO
+		 -->
+		<datasource id="transacaoSincronizacao" table="sh_cieloTransacaoSincronizacao">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="idTransacao" 		name="ID CieloTransação" 	dataType="string"	required="true" 	primaryName="true" />
+				
+				<field id="statusAnterior" 		name="Status Anterior"		dataType="integer" 	required="true" >
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/statusTransacao" />
+				</field>
+				<field id="statusAtual" 		name="Status Atual" 		dataType="integer" 	required="true" >
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/statusTransacao" />
+				</field>
+				
+				<field id="sincronizadoData" 	name="Data de Sincronia"	dataType="datetime" defaultValue="datetime.now"	 />
+			</fields>
+		</datasource>
+		
+		<!-- 
+			DataSource responsável por armazenar tokens para os cartões dos usuários
+		 -->
+		<datasource id="cartaoToken" table="sh_cieloCartaoToken">
+			<fields>
+				<field id="token" 				name="Token" 				dataType="string"	required="true" 	primaryKey="true" 	/>
+				<field id="idCliente" 			name="ID CieloTransação" 	dataType="string"	/>
+				
+				<field id="nomePortador" 		name="Nome do Portador"		dataType="string"	primaryName="true" 	uppercase="true"	/>
+				<field id="cartaoTruncado" 		name="Cartão truncado"		dataType="string"	required="true"	/>
+				<field id="bandeira" 			name="Bandeira"				dataType="string"	required="true"	/>
+				<field id="validade" 			name="Validade"				dataType="string"	required="true"	/>
+				<field id="status" 				name="Status"				dataType="string"	required="true" 	>
+					<options getOptionsFromVariable="\Sh\Modules\cielo\cielo/tokenStatus" 		/>
+				</field>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+		<!-- 
+			Customizo para poder filtrar por
+				- localizador [like]
+				- loja [equal]
+				- status [in]
+		 -->
+		<dataProvider id="transacao_lista" dataSource="transacao">
+			<filters>
+				<filter id="loja" 			field="loja" 			operator="equal"/>
+				<filter id="localizador" 	field="localizador" 	operator="like"/>
+				<filter id="status" 		field="status" 			operator="in"/>
+			</filters>
+		</dataProvider>
+		
+		<!-- DP para busca de transação por localizador -->
+		<dataProvider id="transacaoPorLocalizador" dataSource="transacao">
+			<filters>
+				<filter id="localizador" 	field="localizador"		required="true"/>
+			</filters>
+			<sort>
+				<by order="desc" field="criadoEm"/>
+			</sort>
+		</dataProvider>
+		
+		<!-- DP para busca de transação por localizador -->
+		<dataProvider id="transacaoSincronizacaoPorTransacao" dataSource="transacaoSincronizacao">
+			<filters>
+				<filter id="idTransacao" 	field="idTransacao"		required="true"/>
+			</filters>
+			<sort>
+				<by order="desc" field="sincronizadoData"/>
+			</sort>
+		</dataProvider>
+		
+		<!-- 
+			DataProvider para buscar os cartões de um determinado cliente
+		 -->
+		<dataProvider id="cartaoToken_meusCartoes" dataSource="cartaoToken">
+			<filters>
+				<filter id="idCliente" 	field="idCliente" 	required="true"/>
+				<filter id="status" 	field="status" 		defaultValue="1"/>
+			</filters>
+		</dataProvider>
+		
+	</dataProviders>
+	
+	<actionHandlers>
+	
+		<!-- 
+			Action para sincronizar a transação
+		 -->
+		<actionHandler id="sincronizarTransacao" datasource="transacao" action="sincronizarTransacao" />
+		
+		<!-- 
+			Action para criar uma nova transação com a CIELO
+		 -->
+		<actionHandler id="criarTransacao" datasource="transacao" action="criarTransacao" />
+		
+	</actionHandlers>
+	
+	<jobs>
+		<job id="sincronizarTransacoes" />
+	</jobs>
+	
+</modulo>	

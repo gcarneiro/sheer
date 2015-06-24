@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Controle de Documentos do Sheer</name>
+		<description>Gerenciador dos documentos do Sheer. Cada arquivo a ser operado pelo Sheer deverá passar por este controlador.</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="fileDocument" table="sh_fileDocument">
+			<fields>
+				<field id="id" 				name="Identificador" 		dataType="string"		required="true" 	primaryKey="true" />
+				<field id="size" 			name="Grupo de Usuários" 	dataType="integer" 		required="true" />
+				<field id="name" 			name="Nome" 				dataType="string" 		required="true"		primaryName="true" />
+				<field id="nameFull" 		name="Nome Completo" 		dataType="string" 		required="true"	 />
+				<field id="nameExt" 		name="Extensão" 			dataType="string" 							setNullIfBlank="true" />
+				<field id="path" 			name="Nome" 				dataType="string" 		required="true" />
+				<field id="adicionadoEm" 	name="Data" 				dataType="datetime" 						defaultValue="datetime.now" />
+				<field id="adicionadoPor" 	name="Usuário" 				dataType="string" 		setNullIfBlank="true"	 />
+				<field id="downloads" 		name="Nome" 				dataType="integer" 							defaultValue="0" />
+				<field id="mimeType" 		name="MimeType" 			dataType="string" 		setNullIfBlank="true" />
+				<field id="remove" 			name="Remover" 				dataType="integer" 		defaultValue="2" />
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<!-- Customização especial do detalhes do fileDocument para sempre trazer o downloadLink -->
+		<dataProvider id="fileDocument_detalhes" dataSource="fileDocument" dataParser="fileDocumentParser">
+			<filters>
+				<filter id="id" field="id" required="true"/>
+			</filters>
+		</dataProvider>
+		
+		<!-- Customização especial do lista do fileDocument para sempre trazer o downloadLink -->
+		<dataProvider id="fileDocument_lista" dataSource="fileDocument" dataParser="fileDocumentParser">
+			<filters>
+				<filter id="remove" field="remove" defaultValue="2" />
+			</filters>
+		</dataProvider>
+	
+	</dataProviders>
+	
+	
+	<actionHandlers>
+	
+		<!-- ActionHandler customizado para inserir um novo arquivo -->
+		<actionHandler id="fileDocument_add" datasource="fileDocument" action="fileDocument_add" />
+	
+	</actionHandlers>
+	
+<!-- 	<jobs> -->
+<!-- 		<job id="executarRemocaoDocumentos"/> -->
+<!-- 	</jobs> -->
+	
+</modulo>	

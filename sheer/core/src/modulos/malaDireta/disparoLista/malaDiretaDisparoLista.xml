@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Disparo Listas</name>
+		<description>Modulo para controlar os disparos de mala direta de acordo com as listas designadas</description>
+	</info>
+
+	<datasources>
+	    <datasource id="malaDiretaDisparoLista" table="sh_ml_disparoLista">
+	        <fields>
+	            <field id="id" 					name="Identificador" 						dataType="string" 		primaryKey="true" />
+	            <field id="idDisparo" 			name="Identificador do Disparo" 			dataType="string" 		primaryName="true" />
+	            <field id="idLista" 			name="Identificador da Lista" 				dataType="string">
+	                <options getOptionsFromDataProvider="malaDiretaLista/malaDiretaLista_listaSimples" blankOption="Selecione" />
+	            </field>
+	            <field id="idAgendamento" 		name="Identificador do Agendamento" 		dataType="string">
+	                <options getOptionsFromDataProvider="malaDiretaAgendamento/malaDiretaAgendamento_listaSimples" blankOption="Selecione" />
+	            </field>
+	        </fields>
+	    </datasource>
+	</datasources>
+	
+	<dataProviders>
+	    <dataProvider id="malaDiretaDisparoLista_lista" dataSource="malaDiretaDisparoLista">
+	        <relations>
+	            <relation id="lista" dataSource="malaDiretaLista/malaDiretaLista" leftKey="idLista" />
+	        </relations>
+	    </dataProvider>
+	</dataProviders>
+		
+</modulo>
+

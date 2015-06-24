@@ -1,0 +1,20 @@
+{
+	"sheer" : {
+		"sh_image" : {
+			"width" : 2048,
+			"height" : 1536
+		},
+		"sh_medium" : {
+			"width" : 800,
+			"height" : 600
+		},
+		"sh_tbm" : {
+			"width" : 128,
+			"height" : 96
+		},
+		"sh_stbm" : {
+			"width" : 48,
+			"height" : 36
+		}
+	}
+}

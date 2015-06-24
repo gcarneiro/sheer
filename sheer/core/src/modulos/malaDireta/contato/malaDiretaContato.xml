@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Mala Direta - Contatos</name>
+		<description>Mapeia a existencia de contatos para o envio de emails</description>
+	</info>
+	
+	<datasources>
+	
+		<datasource id="malaDiretaContato" table="sh_ml_contato">
+			<fields>
+				<field id="id" 					name="Identificador" 		dataType="string"	required="true" 	primaryKey="true" />
+				<field id="nome" 				name="Nome" 				dataType="string" 	required="false" 	primaryName="true" />
+				<field id="email" 				name="Email" 				dataType="string" 	required="true"	/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+	
+		<dataProvider id="malaDiretaContato_lista" dataSource="malaDiretaContato">
+			<filters>
+				<filter id="nome" 	field="nome"		operator="likeSplit" />
+				<filter id="email" 	field="email"		operator="like" />
+			</filters>
+		</dataProvider>
+	
+	</dataProviders>
+	
+	
+	<renderables>
+	
+		<!-- 
+			Renderable utilizado para listar os contatos únicos do sistema
+		 -->
+		<renderable id="listar">
+			<dataProviders>
+				<dataProvider id="malaDiretaContato_lista" />
+			</dataProviders>
+			<styles>
+				<style id="listarContatos" path="listarContatos.php"/>
+			</styles>
+		</renderable>
+	
+	</renderables>
+	
+	<actionHandlers>
+	
+		<actionHandler id="malaDiretaContato_add" datasource="malaDiretaContato" action="malaDiretaContato_add" />
+		
+	</actionHandlers>
+	
+</modulo>	

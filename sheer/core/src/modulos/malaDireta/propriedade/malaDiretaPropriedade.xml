@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modulo  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../../../../../core/setup/schemas/module.xsd"
+>
+
+	<info>
+		<name>Propriedades da mala direta</name>
+		<description>Gerenciador de propriedades.</description>
+	</info>
+	
+	<datasources>
+		
+		<datasource id="malaDiretaPropriedade" table="sh_ml_propriedade">
+			<fields>
+				<field id="id" 				name="Identificador" 		dataType="string"		required="true" 			primaryKey="true" />
+				
+				<field id="nome" 			name="Nome" 				dataType="string" 		required="true" 			primaryName="true" />
+				<field id="alias" 			name="Alias" 				dataType="string" 		required="true" 			/>
+			</fields>
+		</datasource>
+		
+	</datasources>
+	
+	<dataProviders>
+		
+		<dataProvider id="malaDiretaPropriedade_lista" dataSource="malaDiretaPropriedade">
+			<filters>
+				<filter id="nome" field="nome"/>
+				<filter id="alias" field="alias"/>
+			</filters>
+		</dataProvider>
+		
+	</dataProviders>
+	
+</modulo>	
+

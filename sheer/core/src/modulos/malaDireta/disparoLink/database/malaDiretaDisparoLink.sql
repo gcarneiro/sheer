@@ -1,0 +1,15 @@
+CREATE TABLE sh_ml_disparoLink (
+
+	id				CHAR(36) NOT NULL,
+	
+	link			VARCHAR(256) NOT NULL,
+	total			INTEGER NOT NULL,
+	criadoEm		DATETIME NOT NULL,
+	
+	
+	CONSTRAINT	 	SIM_ATENDIMENTO_PK PRIMARY KEY (id)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 2015-05-26
+ALTER TABLE sh_ml_disparoLink DROP COLUMN criadoEm;
