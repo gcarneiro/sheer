@@ -1,1 +1,0 @@
-INSERT INTO sh_userProfile VALUES ('FA11C959-A26B-41AA-A4D5-6DE20F622040', 'sheer.testes', 'Sheer - Testes', NULL, 'sheer/testes');
