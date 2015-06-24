@@ -165,9 +165,9 @@ define('sheer/validation', ['sheer'], function ( sheer ) {
 		//não sendo, verificamos se o input possui valor e se possuir valor digo que ele é obrigatorio
 		else {
 			//se for input
-			if( dataNode.tagName.toLowerCase() == 'input' ) {
+			if( node.tagName.toLowerCase() == 'input' ) {
 				//só considero os do tipo texto
-				var inputType = dataNode.getAttribute('type');
+				var inputType = node.getAttribute('type');
 				if( !inputType ) { inputType = 'text'; }
 
 				if( inputType == 'text' && value.length > 0 ) {
@@ -186,7 +186,7 @@ define('sheer/validation', ['sheer'], function ( sheer ) {
 		if( node.tagName.toLowerCase() == 'input' && ( node.getAttribute('type') == 'radio' || node.getAttribute('type') == 'checkbox' ) ) {
 			validated = false;
 			//FIXME acredito que a concatenacao do nome do imput ali dentro pode dar problema devido a []
-			if( $(dataNode).closest('form').find('input[name="'+dataNode.getAttribute('name')+'"]:checked').length > 0 ) {
+			if( jqNode.closest('form').find('input[name="'+node.getAttribute('name')+'"]:checked').length > 0 ) {
 				validated = true;
 			}
 		}
@@ -622,8 +622,6 @@ define('sheer/validation', ['sheer'], function ( sheer ) {
 			 * 
 			 */
 			error : function (node) {
-				
-				console.log(node);
 				
 				var jqDiv = $(node).closest('div');
 				jqDiv.addClass('has-error').addClass('sh-val-failed');
